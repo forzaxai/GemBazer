@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GemBazar — Game Top-Ups &amp; Boosts, Delivered Instantly</title>
+<meta name="description" content="GemBazar is a Bangladesh top-up marketplace for Free Fire diamonds, PUBG Mobile UC, and social media boosts. Pay with bKash, Nagad, or Rocket and get delivery in minutes.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,5 90,35 50,95 10,35' fill='%2300D9C0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E1A;
+    --bg-panel:#131729;
+    --bg-panel-2:#1A2038;
+    --bg-panel-3:#212847;
+    --accent-fire:#FF6B35;
+    --accent-fire-dim:#C2451A;
+    --accent-cyan:#00D9C0;
+    --accent-gold:#FFD166;
+    --text-primary:#F5F3EE;
+    --text-muted:#8B92A8;
+    --text-dim:#5C637A;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --shadow-glow-fire: 0 0 40px rgba(255,107,53,0.25);
+    --shadow-glow-cyan: 0 0 40px rgba(0,217,192,0.20);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+  h1,h2,h3,h4{ font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:0.01em; }
+
+  ::selection{ background:var(--accent-cyan); color:#04121a; }
+
+  .container{ width:100%; max-width:1180px; margin:0 auto; padding:0 24px; }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px; font-weight:500;
+    letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--accent-cyan);
+  }
+  .eyebrow::before{
+    content:''; width:6px; height:6px; background:var(--accent-cyan);
+    clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+    flex-shrink:0;
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:13px 26px; font-size:15px; font-weight:600;
+    font-family:'Inter',sans-serif;
+    clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    white-space:nowrap;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{
+    background:linear-gradient(120deg,var(--accent-fire),var(--accent-fire-dim));
+    color:#fff;
+    box-shadow:0 6px 24px rgba(255,107,53,0.28);
+  }
+  .btn-primary:hover{ filter:brightness(1.08); box-shadow:0 8px 30px rgba(255,107,53,0.4); }
+  .btn-ghost{
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border-strong);
+    color:var(--text-primary);
+  }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.3); }
+  .btn-sm{ padding:9px 18px; font-size:13.5px; }
+  .btn-block{ width:100%; }
+
+  /* ---------- Header ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:18px 0;
+    transition:padding .25s ease, background .25s ease, border-color .25s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    padding:12px 0;
+    background:rgba(11,14,26,0.85);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom-color:var(--border);
+  }
+  header .container{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+  .logo{ display:flex; align-items:center; gap:10px; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:21px; letter-spacing:0.02em; }
+  .logo .gem-mark{ width:26px; height:26px; }
+  .logo span.accent{ color:var(--accent-cyan); }
+
+  nav.main-nav{ display:flex; align-items:center; gap:32px; }
+  nav.main-nav a{
+    font-size:14.5px; font-weight:500; color:var(--text-muted);
+    transition:color .15s ease; position:relative;
+  }
+  nav.main-nav a:hover{ color:var(--text-primary); }
+
+  .header-actions{ display:flex; align-items:center; gap:12px; }
+  .nav-toggle{ display:none; width:38px; height:38px; align-items:center; justify-content:center; }
+  .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{
+    content:''; display:block; width:20px; height:2px; background:var(--text-primary);
+    position:relative; transition:transform .2s ease, opacity .2s ease;
+  }
+  .nav-toggle span::before{ position:absolute; top:-6px; }
+  .nav-toggle span::after{ position:absolute; top:6px; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:168px 0 96px;
+    position:relative;
+  }
+  .hero .container{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:48px; align-items:center;
+  }
+  .hero-copy .eyebrow{ margin-bottom:20px; }
+  .hero-copy h1{
+    font-size:clamp(38px,5.2vw,60px);
+    line-height:1.05;
+    margin-bottom:20px;
+  }
+  .hero-copy h1 em{
+    font-style:normal;
+    background:linear-gradient(100deg,var(--accent-cyan),var(--accent-fire));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-copy p{
+    font-size:16.5px; color:var(--text-muted); max-width:480px; margin-bottom:32px;
+  }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:36px; }
+  .pay-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .pay-row .label{ font-size:12.5px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; letter-spacing:0.06em; }
+  .pay-badge{
+    font-size:13px; font-weight:600; padding:6px 14px;
+    border:1px solid var(--border-strong); color:var(--text-muted);
+    clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+  }
+
+  .hero-visual{ position:relative; display:flex; align-items:center; justify-content:center; height:420px; }
+  .gem-stage{ position:relative; width:320px; height:320px; }
+  .gem-stage .gem-mark{
+    width:100%; height:100%;
+    filter:drop-shadow(0 0 50px rgba(0,217,192,0.35)) drop-shadow(0 0 90px rgba(255,107,53,0.15));
+    animation:gemFloat 6s ease-in-out infinite;
+  }
+  .gem-shine{
+    position:absolute; inset:0;
+    clip-path:polygon(50% 5%,90% 35%,50% 95%,10% 35%);
+    background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.55) 48%, transparent 62%);
+    background-size:260% 260%;
+    animation:gemGlint 3.2s ease-in-out infinite;
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+  .orbit-chip{
+    position:absolute; padding:8px 14px; font-size:12.5px; font-weight:600;
+    background:var(--bg-panel-2); border:1px solid var(--border-strong);
+    clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+    animation:chipFloat 5s ease-in-out infinite;
+    display:flex; align-items:center; gap:6px;
+  }
+  .orbit-chip svg{ width:14px; height:14px; }
+  .chip-1{ top:6%; left:-4%; animation-delay:.2s; }
+  .chip-2{ bottom:14%; right:-6%; animation-delay:1s; color:var(--accent-cyan); }
+  .chip-3{ top:52%; left:-12%; animation-delay:2s; color:var(--accent-fire); }
+
+  @keyframes gemFloat{ 0%,100%{ transform:translateY(0) rotate(-2deg); } 50%{ transform:translateY(-14px) rotate(2deg); } }
+  @keyframes gemGlint{ 0%{ background-position:120% -20%; } 100%{ background-position:-40% 100%; } }
+  @keyframes chipFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+
+  /* ---------- Sections generic ---------- */
+  .section{ padding:88px 0; }
+  .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:40px; flex-wrap:wrap; }
+  .section-head h2{ font-size:clamp(26px,3.4vw,36px); margin-top:10px; }
+  .section-head p{ color:var(--text-muted); max-width:460px; font-size:15px; }
+  .alt-bg{ background:linear-gradient(180deg,transparent, rgba(255,255,255,0.015) 10%, rgba(255,255,255,0.015) 90%, transparent); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ---------- Category grid ---------- */
+  .cat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .cat-card{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    padding:30px 26px;
+    clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));
+    transition:border-color .2s ease, transform .2s ease, background .2s ease;
+  }
+  .cat-card:hover{ border-color:rgba(0,217,192,0.4); transform:translateY(-4px); background:var(--bg-panel-2); }
+  .cat-icon{
+    width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+    background:var(--bg-panel-3); margin-bottom:18px;
+    clip-path:polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px);
+  }
+  .cat-icon svg{ width:22px; height:22px; }
+  .cat-card h3{ font-size:20px; margin-bottom:8px; }
+  .cat-card p{ font-size:14px; color:var(--text-muted); }
+
+  /* ---------- Products ---------- */
+  .filter-tabs{ display:flex; gap:10px; margin-bottom:32px; flex-wrap:wrap; }
+  .tab{
+    padding:9px 18px; font-size:13.5px; font-weight:600; color:var(--text-muted);
+    border:1px solid var(--border-strong);
+    clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+    transition:all .15s ease;
+  }
+  .tab.active, .tab:hover{ color:var(--bg); background:var(--accent-cyan); border-color:var(--accent-cyan); }
+
+  .product-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .product-card{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    padding:22px;
+    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+    transition:border-color .2s ease, transform .2s ease;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .product-card:hover{ border-color:rgba(255,107,53,0.4); transform:translateY(-3px); }
+  .product-tag{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--text-dim);
+  }
+  .product-card h4{ font-size:16.5px; font-weight:600; font-family:'Inter',sans-serif; min-height:44px; }
+  .product-price{ font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; color:var(--accent-gold); }
+  .product-price span{ font-size:12px; color:var(--text-dim); font-weight:400; }
+
+  /* ---------- How it works ---------- */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:32px; position:relative; }
+  .steps::before{
+    content:''; position:absolute; top:26px; left:12%; right:12%; height:1px;
+    background:repeating-linear-gradient(90deg, var(--border-strong) 0 8px, transparent 8px 16px);
+  }
+  .step{ position:relative; z-index:1; }
+  .step-num{
+    width:52px; height:52px; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); border:1px solid var(--border-strong);
+    font-family:'JetBrains Mono',monospace; font-weight:600; font-size:17px; color:var(--accent-cyan);
+    clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+    margin-bottom:20px;
+  }
+  .step h3{ font-size:19px; margin-bottom:8px; font-family:'Inter',sans-serif; font-weight:600; }
+  .step p{ font-size:14.5px; color:var(--text-muted); max-width:280px; }
+
+  /* ---------- Why / features ---------- */
+  .feature-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .feature{ padding:26px 0; border-top:1px solid var(--border); }
+  .feature h3{ font-size:17px; font-weight:600; font-family:'Inter',sans-serif; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .feature h3 svg{ width:18px; height:18px; color:var(--accent-cyan); flex-shrink:0; }
+  .feature p{ font-size:14px; color:var(--text-muted); }
+
+  /* ---------- Support banner ---------- */
+  .support-banner{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    padding:52px;
+    display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
+    clip-path:polygon(0 0,calc(100% - 34px) 0,100% 34px,100% 100%,34px 100%,0 calc(100% - 34px));
+  }
+  .support-banner h3{ font-size:26px; margin-bottom:8px; }
+  .support-banner p{ color:var(--text-muted); font-size:15px; max-width:420px; }
+  .support-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+
+  /* ---------- Footer ---------- */
+  footer{ padding:64px 0 32px; border-top:1px solid var(--border); }
+  .footer-top{ display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:32px; margin-bottom:48px; }
+  .footer-brand p{ color:var(--text-muted); font-size:14px; margin:16px 0 20px; max-width:280px; }
+  .footer-col h4{ font-family:'Inter',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px; font-weight:600; }
+  .footer-col a{ display:block; font-size:14.5px; color:var(--text-muted); margin-bottom:12px; transition:color .15s ease; }
+  .footer-col a:hover{ color:var(--text-primary); }
+  .payment-badges{ display:flex; gap:10px; flex-wrap:wrap; }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:28px; border-top:1px solid var(--border); flex-wrap:wrap; gap:12px; }
+  .footer-bottom p{ font-size:13px; color:var(--text-dim); }
+  .social-icons{ display:flex; gap:14px; }
+  .social-icons a{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; background:var(--bg-panel-2); border:1px solid var(--border); }
+  .social-icons svg{ width:16px; height:16px; color:var(--text-muted); }
+  .social-icons a:hover svg{ color:var(--accent-cyan); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:960px){
+    .hero .container{ grid-template-columns:1fr; }
+    .hero-visual{ height:300px; order:-1; }
+    .gem-stage{ width:220px; height:220px; }
+    .product-grid{ grid-template-columns:repeat(2,1fr); }
+    .cat-grid{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:1fr; gap:44px; }
+    .steps::before{ display:none; }
+    .feature-row{ grid-template-columns:1fr; }
+    .footer-top{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:680px){
+    nav.main-nav{
+      position:fixed; top:64px; left:0; right:0; bottom:0;
+      background:var(--bg); flex-direction:column; align-items:flex-start;
+      padding:32px 24px; gap:4px;
+      transform:translateX(100%); transition:transform .25s ease;
+    }
+    nav.main-nav.open{ transform:translateX(0); }
+    nav.main-nav a{ padding:14px 0; font-size:17px; width:100%; border-bottom:1px solid var(--border); }
+    .nav-toggle{ display:flex; }
+    .header-actions .btn-ghost{ display:none; }
+    .product-grid{ grid-template-columns:1fr 1fr; }
+    .footer-top{ grid-template-columns:1fr; }
+    .support-banner{ padding:36px 24px; flex-direction:column; align-items:flex-start; }
+  }
+  @media (max-width:420px){
+    .product-grid{ grid-template-columns:1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Reusable gem mark (logo / hero) -->
+<svg style="display:none">
+  <symbol id="gem-icon" viewBox="0 0 100 100">
+    <defs>
+      <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00D9C0"/>
+        <stop offset="100%" stop-color="#FF6B35"/>
+      </linearGradient>
+    </defs>
+    <polygon points="50,5 90,35 50,95 10,35" fill="url(#gemGrad)"/>
+    <path d="M10,35 L50,20 L90,35 M10,35 L50,60 L90,35 M50,5 L50,95" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" fill="none"/>
+    <polygon points="50,5 66,17 50,20 38,17" fill="rgba(255,255,255,0.35)"/>
+  </symbol>
+</svg>
+
+<header id="site-header">
+  <div class="container">
+    <a href="#top" class="logo">
+      <svg class="gem-mark"><use href="#gem-icon"/></svg>
+      Gem<span class="accent">Bazar</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="#games">Games</a>
+      <a href="#products">Top-Ups</a>
+      <a href="#how">How it Works</a>
+      <a href="#support">Support</a>
+    </nav>
+    <div class="header-actions">
+      <a href="#" class="btn btn-ghost btn-sm">Log In</a>
+      <a href="#" class="btn btn-primary btn-sm">Register</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-copy">
+        <span class="eyebrow">Bangladesh Top-Up Marketplace</span>
+        <h1>Buy diamonds.<br><em>Get back in the match.</em></h1>
+        <p>Free Fire diamonds, PUBG Mobile UC, and social boosts — paid with bKash, Nagad, or Rocket, delivered straight to your ID in minutes.</p>
+        <div class="hero-actions">
+          <a href="#products" class="btn btn-primary">Browse Top-Ups</a>
+          <a href="#support" class="btn btn-ghost">Track an Order</a>
+        </div>
+        <div class="pay-row">
+          <span class="label">PAY WITH</span>
+          <span class="pay-badge">bKash</span>
+          <span class="pay-badge">Nagad</span>
+          <span class="pay-badge">Rocket</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="gem-stage">
+          <svg class="gem-mark"><use href="#gem-icon"/></svg>
+          <div class="gem-shine"></div>
+        </div>
+        <div class="orbit-chip chip-1"><svg viewBox="0 0 100 100" style="width:14px;height:14px"><use href="#gem-icon"/></svg> 100+10 Diamonds</div>
+        <div class="orbit-chip chip-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 11-14h-7z"/></svg> Instant Delivery</div>
+        <div class="orbit-chip chip-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg> 60 UC Top-Up</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMES / CATEGORIES -->
+  <section class="section" id="games">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">What you can top up</span>
+          <h2>Pick your game or service</h2>
+        </div>
+        <p>Every category below is stocked with real package sizes, from a quick top-up to a full monthly membership.</p>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card reveal">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-fire)" stroke-width="1.8"><path d="M12 2c-1 3-4 4-4 8a4 4 0 0 0 8 0c0-1.5-.7-2.2-1.2-3 .3 1.5-.6 2-1.3 1.5.8-2-.3-4-1.5-6.5Z"/><path d="M8 14a4 4 0 0 0 8 0c0-3-2-4-3-7"/></svg>
+          </div>
+          <h3>Free Fire</h3>
+          <p>Diamonds, weekly &amp; monthly memberships, and level-up packs for the BD and Indonesia servers.</p>
+        </div>
+        <div class="cat-card reveal">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+          </div>
+          <h3>PUBG Mobile</h3>
+          <p>UC top-ups in every size, from a small refill to bulk packs for season passes and crates.</p>
+        </div>
+        <div class="cat-card reveal">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4V4Z"/></svg>
+          </div>
+          <h3>Social Boosts</h3>
+          <p>Followers, likes, and views for TikTok, Facebook, and Instagram — refill options included.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="section alt-bg" id="products">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Popular right now</span>
+          <h2>Top-up packages</h2>
+        </div>
+        <p>Prices below are placeholders — swap in your real pricing before you launch.</p>
+      </div>
+      <div class="filter-tabs reveal">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="freefire">Free Fire</button>
+        <button class="tab" data-filter="pubg">PUBG Mobile</button>
+        <button class="tab" data-filter="social">Social Boosts</button>
+      </div>
+      <div class="product-grid" id="product-grid">
+        <div class="product-card reveal" data-category="freefire">
+          <span class="product-tag">Free Fire</span>
+          <h4>100 + 10 Diamonds</h4>
+          <div class="product-price">৳85 <span>/ package</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="freefire">
+          <span class="product-tag">Free Fire</span>
+          <h4>Weekly Membership</h4>
+          <div class="product-price">৳150 <span>/ week</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="freefire">
+          <span class="product-tag">Free Fire</span>
+          <h4>Level Up Pass (BD)</h4>
+          <div class="product-price">৳200 <span>/ pass</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="pubg">
+          <span class="product-tag">PUBG Mobile</span>
+          <h4>60 UC Top-Up</h4>
+          <div class="product-price">৳110 <span>/ package</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="pubg">
+          <span class="product-tag">PUBG Mobile</span>
+          <h4>325 UC Top-Up</h4>
+          <div class="product-price">৳480 <span>/ package</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="social">
+          <span class="product-tag">Social Boost</span>
+          <h4>TikTok 1,000 Followers</h4>
+          <div class="product-price">৳250 <span>/ order</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="social">
+          <span class="product-tag">Social Boost</span>
+          <h4>Facebook Page 500 Likes</h4>
+          <div class="product-price">৳300 <span>/ order</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+        <div class="product-card reveal" data-category="social">
+          <span class="product-tag">Social Boost</span>
+          <h4>Instagram 500 Likes</h4>
+          <div class="product-price">৳150 <span>/ order</span></div>
+          <a href="#support" class="btn btn-ghost btn-sm btn-block">Top Up Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">The process</span>
+          <h2>Three steps, start to finish</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">01</div>
+          <h3>Pick your package</h3>
+          <p>Choose the game or service, then the exact package size you need.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">02</div>
+          <h3>Pay your way</h3>
+          <p>Check out with bKash, Nagad, or Rocket — whichever you already use.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">03</div>
+          <h3>Get it instantly</h3>
+          <p>Delivery goes straight to your player ID, usually within minutes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY / FEATURES -->
+  <section class="section alt-bg">
+    <div class="container">
+      <div class="feature-row">
+        <div class="feature reveal">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 11-14h-7z"/></svg>Fast delivery</h3>
+          <p>Most orders are confirmed and delivered within minutes of payment.</p>
+        </div>
+        <div class="feature reveal">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8 9 10 5-2 9-5 9-10V6z"/></svg>Secure checkout</h3>
+          <p>Every payment method is verified before an order ships to your ID.</p>
+        </div>
+        <div class="feature reveal">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Real support</h3>
+          <p>Stuck mid-order? Reach a real person on Telegram or WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT -->
+  <section class="section" id="support">
+    <div class="container">
+      <div class="support-banner reveal">
+        <div>
+          <h3>Need help with an order?</h3>
+          <p>Message us your order ID and player ID — we'll sort it out fast.</p>
+        </div>
+        <div class="support-actions">
+          <a href="https://t.me/yourbrand" class="btn btn-primary">Message on Telegram</a>
+          <a href="https://wa.me/8800000000" class="btn btn-ghost">Chat on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#top" class="logo">
+          <svg class="gem-mark"><use href="#gem-icon"/></svg>
+          Gem<span class="accent">Bazar</span>
+        </a>
+        <p>A top-up marketplace for game diamonds, UC, and social boosts — built for Bangladeshi payment methods.</p>
+        <div class="payment-badges">
+          <span class="pay-badge">bKash</span>
+          <span class="pay-badge">Nagad</span>
+          <span class="pay-badge">Rocket</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <a href="#games">Games</a>
+        <a href="#products">Top-Ups</a>
+        <a href="#how">How it Works</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#support">Contact Us</a>
+        <a href="#">FAQ</a>
+        <a href="#">Report an Issue</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 GemBazar. All rights reserved.</p>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3h-3a4 4 0 0 0-4 4v3H7v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="m10 9 5 3-5 3Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Header blur/shrink on scroll
+  const header = document.getElementById('site-header');
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 12);
+  document.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('nav-toggle');
+  const mainNav = document.getElementById('main-nav');
+  navToggle.addEventListener('click', () => mainNav.classList.toggle('open'));
+  mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mainNav.classList.remove('open')));
+
+  // Product category filter
+  const tabs = document.querySelectorAll('.tab');
+  const cards = document.querySelectorAll('.product-card');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.dataset.filter;
+      cards.forEach(card => {
+        const match = filter === 'all' || card.dataset.category === filter;
+        card.style.display = match ? '' : 'none';
+      });
+    });
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold:0.12 });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in'));
+  }
+</script>
+
+</body>
+</html>
