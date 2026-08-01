@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GemBazar — Recharge Bazaar</title>
+<meta name="description" content="Top up Free Fire Diamonds, PUBG UC and social growth packages. Pay with bKash, Nagad or Rocket — delivered by hand, verified manually." />
+<meta name="theme-color" content="#14101F" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14101F;
+    --ink-soft:#1E1830;
+    --ink-line:#332A49;
+    --paper:#F4EEDD;
+    --muted:#A79FC0;
+    --lantern:#F6B93B;
+    --lantern-dark:#C9891E;
+    --ruby:#E14360;
+    --sapphire:#4C86C6;
+    --emerald:#48A87C;
+    --bkash:#E2136E;
+    --nagad:#F7941D;
+    --rocket:#8C3494;
+    --radius-lg:18px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --shadow:0 20px 40px -20px rgba(0,0,0,.6);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *,*::before,*::after{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Manrope', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3,.font-display{ font-family:'Baloo 2', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  a{ color:inherit; }
+  button{ font-family:inherit; cursor:pointer; }
+  input{ font-family:inherit; }
+
+  img,svg{ display:block; }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 20px;
+  }
+
+  /* ---------- Header ---------- */
+  .site-header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(20,16,31,.86);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--ink-line);
+  }
+  .header-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px;
+    max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1.3rem;
+    letter-spacing:.2px;
+    text-decoration:none;
+    color:var(--paper);
+  }
+  .brand-mark{ width:30px; height:30px; flex:none; }
+  .header-nav{ display:flex; align-items:center; gap:22px; }
+  .header-nav a{
+    text-decoration:none; color:var(--muted); font-weight:600; font-size:.94rem;
+    transition:color .15s ease;
+  }
+  .header-nav a:hover, .header-nav a:focus-visible{ color:var(--paper); }
+  .btn-support{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--lantern); color:#1B1408;
+    padding:9px 16px; border-radius:999px;
+    font-weight:700; font-size:.88rem; text-decoration:none;
+    border:none;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-support:hover{ transform:translateY(-1px); box-shadow:0 8px 20px -8px rgba(246,185,59,.6); }
+
+  .btn-auth{
+    display:inline-flex; align-items:center; gap:8px;
+    background:transparent; color:var(--paper); border:1px solid var(--ink-line);
+    padding:8px 15px; border-radius:999px; font-weight:700; font-size:.86rem;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .btn-auth:hover{ border-color:var(--lantern); color:var(--lantern); }
+  .user-chip{ display:inline-flex; align-items:center; gap:10px; }
+  .wallet-pill{
+    background:rgba(246,185,59,.14); border:1px solid rgba(246,185,59,.35); color:var(--lantern);
+    font-family:'JetBrains Mono', monospace; font-weight:600; font-size:.82rem;
+    padding:6px 12px; border-radius:999px;
+  }
+  .wallet-pill:hover{ background:rgba(246,185,59,.22); }
+  .user-chip .email{
+    max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:.84rem; font-weight:600; color:var(--muted);
+  }
+  .user-chip button{
+    background:transparent; border:1px solid var(--ink-line); color:var(--paper);
+    padding:7px 13px; border-radius:999px; font-size:.8rem; font-weight:700;
+  }
+  .user-chip button:hover{ border-color:var(--ruby); color:var(--ruby); }
+
+  .auth-tabs{ display:flex; gap:6px; margin-bottom:18px; background:var(--ink); border:1px solid var(--ink-line); border-radius:999px; padding:4px; }
+  .auth-tab{
+    flex:1; background:transparent; border:none; color:var(--muted); font-weight:700; font-size:.86rem;
+    padding:9px; border-radius:999px;
+  }
+  .auth-tab.active{ background:var(--paper); color:var(--ink); }
+  .auth-error{ color:var(--ruby); font-size:.82rem; margin:-6px 0 14px; display:none; }
+  .auth-error.show{ display:block; }
+  .auth-note{ color:var(--muted); font-size:.78rem; margin:-6px 0 16px; }
+  .auth-forgot{ background:none; border:none; color:var(--muted); font-size:.82rem; padding:4px 0; text-decoration:underline; margin-top:-6px; }
+  .auth-forgot:hover{ color:var(--lantern); }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:56px 0 20px; position:relative; overflow:hidden; }
+  .hero-glow{
+    position:absolute; inset:-20% -10% auto -10%; height:420px;
+    background: radial-gradient(60% 60% at 30% 20%, rgba(246,185,59,.16), transparent 70%),
+                radial-gradient(50% 50% at 80% 10%, rgba(225,67,96,.14), transparent 70%);
+    filter:blur(10px); pointer-events:none;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ink-soft); border:1px solid var(--ink-line);
+    color:var(--lantern); font-weight:700; font-size:.78rem;
+    padding:7px 14px; border-radius:999px; letter-spacing:.3px;
+    position:relative;
+  }
+  .hero h1{
+    font-size:clamp(2rem, 5vw, 3.4rem);
+    font-weight:800; margin:22px 0 14px; max-width:14ch; line-height:1.08;
+    position:relative;
+  }
+  .hero h1 span{ color:var(--lantern); }
+  .hero p.lead{
+    color:var(--muted); font-size:1.05rem; max-width:52ch; margin:0 0 28px;
+    position:relative;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; position:relative; }
+  .btn-primary{
+    background:var(--lantern); color:#1B1408; border:none;
+    padding:13px 24px; border-radius:999px; font-weight:800; font-size:.96rem;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 10px 26px -10px rgba(246,185,59,.55); }
+  .btn-ghost{
+    background:transparent; color:var(--paper); border:1px solid var(--ink-line);
+    padding:13px 22px; border-radius:999px; font-weight:700; font-size:.96rem;
+    text-decoration:none;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--lantern); color:var(--lantern); }
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    margin-top:44px; border-top:1px solid var(--ink-line); border-bottom:1px solid var(--ink-line);
+    overflow:hidden; white-space:nowrap; padding:14px 0;
+  }
+  .marquee-track{
+    display:inline-flex; gap:36px; animation:marquee 26s linear infinite; width:max-content;
+  }
+  @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  .marquee-item{
+    display:inline-flex; align-items:center; gap:10px;
+    color:var(--muted); font-weight:600; font-size:.92rem;
+  }
+  .marquee-item b{ color:var(--paper); font-weight:700; }
+  .marquee-dot{ color:var(--lantern); }
+
+  /* ---------- Category tabs ---------- */
+  .cat-tabs{
+    position:sticky; top:64px; z-index:30;
+    background:var(--ink);
+    padding:18px 0 4px;
+  }
+  .cat-tabs-row{
+    display:flex; gap:10px; overflow-x:auto; padding-bottom:10px;
+    scrollbar-width:thin;
+  }
+  .tab-btn{
+    flex:none;
+    background:var(--ink-soft); border:1px solid var(--ink-line); color:var(--muted);
+    padding:10px 18px; border-radius:999px; font-weight:700; font-size:.88rem;
+    transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{ color:var(--paper); }
+  .tab-btn.active{
+    background:var(--paper); color:var(--ink); border-color:var(--paper);
+  }
+
+  /* ---------- Catalog ---------- */
+  .catalog{ padding:20px 0 60px; }
+  .cat-section{ margin-top:44px; }
+  .cat-section-head{
+    display:flex; align-items:center; gap:14px; margin-bottom:20px;
+  }
+  .cat-icon-badge{
+    width:42px; height:42px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+  .cat-section-head h2{ font-size:1.4rem; margin:0; font-weight:700; }
+  .cat-section-head p{ margin:2px 0 0; color:var(--muted); font-size:.88rem; }
+
+  .ticket-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+    gap:16px;
+  }
+
+  .ticket{
+    background:var(--ink-soft); border:1px solid var(--ink-line);
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .ticket:hover{ transform:translateY(-3px); border-color:var(--ink-line); }
+  .ticket-top{ padding:18px 18px 16px; }
+  .ticket-icon{ width:30px; height:30px; margin-bottom:12px; }
+  .ticket-name{ font-weight:700; font-size:1.02rem; margin:0 0 6px; }
+  .ticket-tag{
+    display:inline-block; font-size:.72rem; font-weight:700;
+    padding:3px 9px; border-radius:999px; letter-spacing:.2px;
+  }
+  .ticket-perf{
+    position:relative; height:0; border-top:2px dashed var(--ink-line); margin:0 2px;
+  }
+  .ticket-perf::before, .ticket-perf::after{
+    content:""; position:absolute; top:-12px; width:24px; height:24px;
+    border-radius:50%; background:var(--ink);
+  }
+  .ticket-perf::before{ left:-13px; }
+  .ticket-perf::after{ right:-13px; }
+  .ticket-bottom{
+    padding:16px 18px 18px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-top:auto;
+  }
+  .ticket-price{ font-family:'JetBrains Mono', monospace; font-weight:600; font-size:1.05rem; color:var(--lantern); }
+  .ticket-btn{
+    background:var(--paper); color:var(--ink); border:none;
+    padding:9px 16px; border-radius:999px; font-weight:800; font-size:.84rem;
+    transition:transform .15s ease;
+  }
+  .ticket-btn:hover{ transform:scale(1.04); }
+
+  .tag-ruby{ background:rgba(225,67,96,.16); color:#FF7C93; }
+  .tag-sapphire{ background:rgba(76,134,198,.16); color:#8FBBED; }
+  .tag-emerald{ background:rgba(72,168,124,.16); color:#7FD3AA; }
+
+  /* ---------- Track order ---------- */
+  .track-section{ padding:50px 0 70px; border-top:1px solid var(--ink-line); }
+  .track-head h2{ font-size:1.5rem; margin:0 0 6px; }
+  .track-head p{ color:var(--muted); margin:0 0 24px; max-width:56ch; }
+  .track-form{ display:flex; gap:10px; max-width:460px; flex-wrap:wrap; }
+  .track-form input{
+    flex:1; min-width:200px;
+    background:var(--ink-soft); border:1px solid var(--ink-line); color:var(--paper);
+    padding:12px 14px; border-radius:var(--radius-sm); font-size:.94rem;
+  }
+  .track-form input:focus-visible{ outline:2px solid var(--lantern); outline-offset:1px; }
+  .track-form button{
+    background:var(--lantern); color:#1B1408; border:none; font-weight:800;
+    padding:12px 20px; border-radius:var(--radius-sm); font-size:.9rem;
+  }
+  .track-result{ margin-top:22px; max-width:520px; }
+  .order-card{
+    background:var(--ink-soft); border:1px solid var(--ink-line); border-radius:var(--radius-md);
+    padding:18px 20px;
+  }
+  .order-card-row{ display:flex; justify-content:space-between; gap:10px; padding:6px 0; font-size:.9rem; }
+  .order-card-row span:first-child{ color:var(--muted); }
+  .status-pill{
+    display:inline-block; padding:4px 12px; border-radius:999px; font-size:.78rem; font-weight:700;
+  }
+  .status-pending{ background:rgba(246,185,59,.16); color:var(--lantern); }
+  .status-delivered{ background:rgba(72,168,124,.16); color:#7FD3AA; }
+  .status-rejected{ background:rgba(225,67,96,.16); color:#FF7C93; }
+  .status-notfound{ color:var(--muted); font-size:.9rem; }
+
+  /* ---------- Admin ---------- */
+  .admin-overlay{
+    position:fixed; inset:0; background:var(--ink); z-index:250;
+    display:none; flex-direction:column; overflow-y:auto;
+  }
+  .admin-overlay.open{ display:flex; }
+  .admin-top{
+    position:sticky; top:0; z-index:2; background:rgba(20,16,31,.94); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--ink-line);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; gap:12px; flex-wrap:wrap;
+  }
+  .admin-top .title{ display:flex; align-items:center; gap:10px; font-weight:800; font-family:'Baloo 2', sans-serif; font-size:1.1rem; }
+  .admin-tag{ background:var(--lantern); color:#1B1408; font-size:.7rem; font-weight:800; padding:2px 9px; border-radius:999px; }
+  .admin-top-actions{ display:flex; gap:8px; }
+  .admin-icon-btn{
+    background:var(--ink-soft); border:1px solid var(--ink-line); color:var(--paper);
+    padding:8px 14px; border-radius:999px; font-size:.82rem; font-weight:700;
+  }
+  .admin-icon-btn:hover{ border-color:var(--lantern); color:var(--lantern); }
+  .admin-icon-btn.danger:hover{ border-color:var(--ruby); color:var(--ruby); }
+
+  .admin-body{ padding:22px 20px 60px; max-width:900px; margin:0 auto; width:100%; }
+
+  .admin-stats{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
+  .stat-card{ background:var(--ink-soft); border:1px solid var(--ink-line); border-radius:var(--radius-sm); padding:14px 16px; }
+  .stat-card .num{ font-family:'JetBrains Mono', monospace; font-size:1.4rem; font-weight:600; color:var(--lantern); }
+  .stat-card .lbl{ color:var(--muted); font-size:.78rem; margin-top:2px; }
+
+  .admin-toolbar{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center; }
+  .admin-search{
+    flex:1; min-width:180px; background:var(--ink-soft); border:1px solid var(--ink-line); color:var(--paper);
+    padding:10px 14px; border-radius:var(--radius-sm); font-size:.88rem;
+  }
+  .admin-filter-tabs{ display:flex; gap:6px; flex-wrap:wrap; }
+  .admin-filter-tabs .tab-btn{ padding:8px 14px; font-size:.8rem; }
+
+  .admin-order-list{ display:flex; flex-direction:column; gap:12px; }
+  .admin-order-row{
+    background:var(--ink-soft); border:1px solid var(--ink-line); border-radius:var(--radius-md);
+    padding:16px 18px;
+  }
+  .admin-order-row-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .admin-order-row-top .oid{ font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--lantern); font-size:.95rem; }
+  .admin-order-details{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:8px 16px; font-size:.84rem; margin-bottom:12px; }
+  .admin-order-details div span{ display:block; }
+  .admin-order-details .k{ color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.3px; }
+  .admin-order-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .admin-order-actions button{
+    background:var(--ink); border:1px solid var(--ink-line); color:var(--paper);
+    padding:7px 13px; border-radius:999px; font-size:.78rem; font-weight:700;
+  }
+  .admin-order-actions button.current{ background:var(--paper); color:var(--ink); border-color:var(--paper); }
+  .admin-order-actions button.delete{ color:var(--ruby); border-color:transparent; margin-left:auto; }
+  .admin-order-actions button.delete:hover{ background:rgba(225,67,96,.12); }
+  .admin-empty{ color:var(--muted); text-align:center; padding:50px 20px; font-size:.9rem; }
+
+  .admin-ban-panel{ background:var(--ink-soft); border:1px solid var(--ink-line); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:24px; }
+  .admin-ban-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .admin-ban-head h3{ margin:0; font-size:.95rem; }
+  .admin-ban-add{ display:flex; gap:8px; }
+  .admin-ban-add input{
+    background:var(--ink); border:1px solid var(--ink-line); color:var(--paper);
+    padding:8px 12px; border-radius:var(--radius-sm); font-size:.82rem; min-width:190px;
+  }
+  .admin-ban-add button{ background:var(--ruby); color:#fff; border:none; padding:8px 15px; border-radius:999px; font-size:.8rem; font-weight:700; }
+  .banned-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(--ink-line); font-size:.85rem; }
+  .banned-row:first-child{ border-top:none; }
+  .banned-row button{ background:transparent; border:1px solid var(--ink-line); color:var(--paper); padding:5px 13px; border-radius:999px; font-size:.76rem; font-weight:700; }
+  .banned-row button:hover{ border-color:var(--emerald); color:var(--emerald); }
+  .admin-empty-small{ color:var(--muted); font-size:.82rem; padding:4px 0; }
+  .alert-time{ color:var(--muted); font-size:.76rem; }
+  .admin-note-small{ color:var(--muted); font-size:.8rem; line-height:1.5; margin:-2px 0 12px; }
+  .protected-badge{ font-size:.72rem; color:var(--lantern); font-weight:700; padding:7px 4px; }
+  .alert-time{ color:var(--muted); font-size:.76rem; margin-left:8px; }
+  .banned-row .btn-group{ display:flex; gap:6px; flex:none; }
+
+  .recent-orders{ margin-top:26px; }
+  .recent-orders p{ font-size:.82rem; color:var(--muted); margin:0 0 8px; }
+  .my-orders{ margin-top:30px; }
+  .my-orders p{ font-size:.82rem; color:var(--muted); margin:0 0 10px; }
+  .order-row-mini{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:var(--ink-soft); border:1px solid var(--ink-line); border-radius:var(--radius-sm);
+    padding:12px 16px; margin-bottom:8px; font-size:.86rem;
+  }
+  .order-row-mini .left{ display:flex; flex-direction:column; gap:2px; }
+  .order-row-mini .oid-mini{ font-family:'JetBrains Mono', monospace; color:var(--lantern); font-size:.82rem; }
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{
+    background:var(--ink-soft); border:1px solid var(--ink-line); color:var(--muted);
+    padding:6px 12px; border-radius:999px; font-size:.78rem; font-family:'JetBrains Mono', monospace;
+  }
+  .chip:hover{ color:var(--paper); border-color:var(--lantern); }
+
+  /* ---------- Footer ---------- */
+  footer{ border-top:1px solid var(--ink-line); padding:40px 0 30px; }
+  .footer-row{ display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+  .footer-brand{ max-width:340px; }
+  .footer-brand .brand{ margin-bottom:10px; }
+  .footer-brand p{ color:var(--muted); font-size:.86rem; }
+  .footer-links{ display:flex; gap:40px; flex-wrap:wrap; }
+  .footer-col h4{ font-size:.82rem; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin:0 0 10px; }
+  .footer-col a{ display:block; text-decoration:none; color:var(--paper); font-size:.9rem; margin-bottom:8px; opacity:.9; }
+  .footer-col a:hover{ color:var(--lantern); }
+  .disclaimer{ margin-top:30px; padding-top:20px; border-top:1px solid var(--ink-line); color:var(--muted); font-size:.78rem; line-height:1.6; }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,8,16,.72);
+    display:none; align-items:flex-end; justify-content:center;
+    z-index:100; padding:0;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background:var(--ink-soft); width:100%; max-width:480px;
+    border-radius:20px 20px 0 0;
+    max-height:92vh; overflow-y:auto;
+    padding:22px 22px 28px;
+    border:1px solid var(--ink-line); border-bottom:none;
+  }
+  @media (min-width:640px){
+    .modal-overlay{ align-items:center; }
+    .modal{ border-radius:20px; border-bottom:1px solid var(--ink-line); margin:20px; }
+  }
+  .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .modal-head h3{ margin:0; font-size:1.2rem; }
+  .modal-close{
+    background:none; border:none; color:var(--muted); font-size:1.3rem; line-height:1; padding:4px;
+  }
+  .modal-close:hover{ color:var(--paper); }
+
+  .summary-ticket{
+    background:var(--ink); border:1px solid var(--ink-line); border-radius:var(--radius-sm);
+    padding:14px 16px; display:flex; justify-content:space-between; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .summary-ticket .name{ font-weight:700; font-size:.96rem; }
+  .summary-ticket .cat{ color:var(--muted); font-size:.78rem; }
+  .summary-ticket .price{ font-family:'JetBrains Mono', monospace; color:var(--lantern); font-weight:700; }
+
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:.82rem; font-weight:700; color:var(--muted); margin-bottom:6px; }
+  .field input{
+    width:100%; background:var(--ink); border:1px solid var(--ink-line); color:var(--paper);
+    padding:11px 13px; border-radius:var(--radius-sm); font-size:.94rem;
+  }
+  .field input:focus-visible{ outline:2px solid var(--lantern); outline-offset:1px; }
+
+  .pay-methods{ display:flex; gap:8px; margin-bottom:14px; }
+  .pay-btn{
+    flex:1; border:1px solid var(--ink-line); background:var(--ink); color:var(--paper);
+    padding:11px 8px; border-radius:var(--radius-sm); font-weight:700; font-size:.86rem;
+    transition:all .15s ease;
+  }
+  .pay-btn[data-method="bkash"].active{ background:var(--bkash); border-color:var(--bkash); color:#fff; }
+  .pay-btn[data-method="nagad"].active{ background:var(--nagad); border-color:var(--nagad); color:#1B1408; }
+  .pay-btn[data-method="rocket"].active{ background:var(--rocket); border-color:var(--rocket); color:#fff; }
+
+  .pay-instructions{
+    display:none;
+    background:var(--ink); border:1px dashed var(--ink-line); border-radius:var(--radius-sm);
+    padding:12px 14px; font-size:.86rem; color:var(--muted); margin-bottom:16px; line-height:1.6;
+  }
+  .pay-instructions.show{ display:block; }
+  .pay-instructions b{ color:var(--paper); font-family:'JetBrains Mono', monospace; }
+
+  .submit-btn{
+    width:100%; background:var(--lantern); color:#1B1408; border:none; font-weight:800;
+    padding:14px; border-radius:999px; font-size:.98rem; margin-top:6px;
+  }
+  .submit-btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+  .form-error{ color:var(--ruby); font-size:.82rem; margin:-8px 0 14px; display:none; }
+  .form-error.show{ display:block; }
+
+  .success-view{ display:none; text-align:center; padding:10px 0 4px; }
+  .success-view.show{ display:block; }
+  .success-check{ width:52px; height:52px; margin:0 auto 16px; }
+  .success-view h3{ margin:0 0 8px; font-size:1.25rem; }
+  .success-view p{ color:var(--muted); font-size:.9rem; margin:0 0 18px; }
+  .order-id-box{
+    background:var(--ink); border:1px solid var(--ink-line); border-radius:var(--radius-sm);
+    padding:14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;
+  }
+  .order-id-box .mono{ font-size:1.05rem; color:var(--lantern); font-weight:600; }
+  .copy-btn{ background:var(--ink-line); border:none; color:var(--paper); padding:7px 12px; border-radius:8px; font-size:.78rem; font-weight:700; }
+  .success-actions{ display:flex; gap:10px; }
+  .success-actions button, .success-actions a{
+    flex:1; padding:12px; border-radius:999px; font-weight:700; font-size:.86rem; text-align:center; text-decoration:none;
+    border:1px solid var(--ink-line); background:transparent; color:var(--paper);
+  }
+  .success-actions .primary{ background:var(--lantern); color:#1B1408; border:none; }
+
+  /* Toast */
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--paper); color:var(--ink); padding:12px 20px; border-radius:999px;
+    font-weight:700; font-size:.88rem; opacity:0; pointer-events:none; transition:all .25s ease;
+    z-index:200;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:640px){
+    .header-nav a:not(.btn-support){ display:none; }
+    .cat-tabs{ top:60px; }
+    .footer-row{ flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="#top" class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 9 L12 22 L4 9 Z" fill="#F6B93B"/><path d="M12 2 L20 9 L12 12 Z" fill="#FBD877"/><path d="M4 9 L12 12 L12 22 Z" fill="#C9891E"/></svg>
+      GemBazar
+    </a>
+    <nav class="header-nav">
+      <a href="#catalog">Packages</a>
+      <a href="#track">Track Order</a>
+      <span id="authSlot"></span>
+      <a class="btn-support" id="whatsappLink" href="#" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Z" stroke="#1B1408" stroke-width="1.6"/></svg>
+        Support
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="wrap">
+      <span class="eyebrow">⚡ Instant delivery · bKash · Nagad · Rocket</span>
+      <h1>Top up your game.<br>Not your <span>patience</span>.</h1>
+      <p class="lead">Free Fire Diamonds, PUBG Mobile UC and social growth packages — paid by bKash, Nagad or Rocket, and delivered by hand within minutes.</p>
+      <div class="hero-ctas">
+        <a href="#catalog" class="btn-primary">Browse packages ↓</a>
+        <a href="#track" class="btn-ghost">Track an order</a>
+      </div>
+    </div>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="cat-tabs" id="catTabs">
+      <div class="cat-tabs-row" id="catTabsRow"></div>
+    </div>
+
+    <section class="catalog" id="catalog"></section>
+
+    <section class="track-section" id="track">
+      <div class="track-head">
+        <h2>Track your order</h2>
+        <p>Enter the Order ID from your confirmation. Orders are verified manually and usually delivered within 10–30 minutes.</p>
+      </div>
+      <div class="track-form">
+        <input type="text" id="trackInput" maxlength="40" placeholder="e.g. GB-8K3F2A" aria-label="Order ID">
+        <button id="trackBtn">Track</button>
+      </div>
+      <div class="track-result" id="trackResult"></div>
+
+      <div class="recent-orders" id="recentOrders" style="display:none;">
+        <p>Your recent orders on this device</p>
+        <div class="chip-row" id="recentOrdersRow"></div>
+      </div>
+
+      <div class="my-orders" id="myOrdersSection" style="display:none;">
+        <p>Your orders</p>
+        <div id="myOrdersList"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <a href="#top" class="brand">
+          <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M12 2 L20 9 L12 22 L4 9 Z" fill="#F6B93B"/><path d="M12 2 L20 9 L12 12 Z" fill="#FBD877"/><path d="M4 9 L12 12 L12 22 Z" fill="#C9891E"/></svg>
+          GemBazar
+        </a>
+        <p>A Bangladeshi recharge bazaar for Free Fire, PUBG Mobile and social growth — built for quick, mobile-first checkout.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Packages</h4>
+          <a href="#catalog">Free Fire Diamonds</a>
+          <a href="#catalog">PUBG Mobile UC</a>
+          <a href="#catalog">Social Growth</a>
+        </div>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <a href="#track">Track an order</a>
+          <a id="whatsappLink2" href="#" target="_blank" rel="noopener">WhatsApp support</a>
+        </div>
+      </div>
+    </div>
+    <p class="disclaimer">GemBazar is an independent top-up reseller and is not affiliated with, endorsed by, or sponsored by Garena, Krafton, TikTok, Meta, or any platform owner mentioned above. All trademarks belong to their respective owners. Payments are verified manually — please double-check the payment number and package before sending money.</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Confirm your top-up</h3>
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    </div>
+
+    <div id="orderFormView">
+      <div class="summary-ticket">
+        <div>
+          <div class="name" id="sumName">—</div>
+          <div class="cat" id="sumCat">—</div>
+        </div>
+        <div class="price mono" id="sumPrice">—</div>
+      </div>
+
+      <form id="orderForm">
+        <div class="field">
+          <label id="idLabel" for="playerIdInput">Player ID</label>
+          <input type="text" id="playerIdInput" required maxlength="60" placeholder="Enter your ID">
+        </div>
+
+        <div class="field">
+          <label>Payment method</label>
+          <div class="pay-methods" id="payMethods">
+            <button type="button" class="pay-btn" data-method="bkash">bKash</button>
+            <button type="button" class="pay-btn" data-method="nagad">Nagad</button>
+            <button type="button" class="pay-btn" data-method="rocket">Rocket</button>
+          </div>
+          <div class="pay-instructions" id="payInstructions"></div>
+        </div>
+
+        <div class="field">
+          <label for="senderInput">Number you sent money from</label>
+          <input type="tel" id="senderInput" required maxlength="20" placeholder="01XXXXXXXXX">
+        </div>
+
+        <div class="field">
+          <label for="txnInput">Transaction ID</label>
+          <input type="text" id="txnInput" required maxlength="40" placeholder="e.g. 8N7X2K1A9B">
+        </div>
+
+        <p class="form-error" id="formError">Please fill in every field and choose a payment method.</p>
+
+        <button type="submit" class="submit-btn">Submit order</button>
+      </form>
+    </div>
+
+    <div class="success-view" id="successView">
+      <svg class="success-check" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="#48A87C" stroke-width="2"/><path d="M15 27 L22 34 L37 18" stroke="#48A87C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Order submitted!</h3>
+      <p>We verify payments manually and deliver within 10–30 minutes. Save your Order ID to check status anytime.</p>
+      <div class="order-id-box">
+        <span class="mono" id="successOrderId">GB-XXXXXX</span>
+        <button class="copy-btn" id="copyOrderId">Copy</button>
+      </div>
+      <div class="success-actions">
+        <button type="button" id="trackThisOrder">Track this order</button>
+        <button type="button" class="primary" id="closeSuccess">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="authModalTitle">Log in</h3>
+      <button class="modal-close" id="authModalClose" aria-label="Close">✕</button>
+    </div>
+
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" data-mode="login">Log in</button>
+      <button type="button" class="auth-tab" data-mode="register">Register</button>
+    </div>
+
+    <p class="auth-note" id="authNote">Log in to have your email attached to orders you place, so support can find you faster.</p>
+
+    <form id="authForm">
+      <div class="field">
+        <label for="authEmail">Email</label>
+        <input type="email" id="authEmail" required maxlength="100" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="authPassword">Password</label>
+        <input type="password" id="authPassword" required maxlength="100" autocomplete="current-password" placeholder="At least 6 characters" minlength="6">
+      </div>
+
+      <p class="auth-error" id="authError"></p>
+
+      <button type="submit" class="submit-btn" id="authSubmitBtn">Log in</button>
+      <button type="button" class="auth-forgot" id="authForgotBtn">Forgot password?</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addMoneyModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Add money</h3>
+      <button class="modal-close" id="addMoneyClose" aria-label="Close">✕</button>
+    </div>
+
+    <div id="addMoneyFormView">
+      <p class="auth-note">Send money via bKash, Nagad, or Rocket, then submit the details below. Your balance updates once it's verified — usually within 10–30 minutes.</p>
+
+      <form id="addMoneyForm">
+        <div class="field">
+          <label for="depositAmountInput">Amount (৳)</label>
+          <input type="number" id="depositAmountInput" required min="20" max="50000" step="1" placeholder="e.g. 500">
+        </div>
+
+        <div class="field">
+          <label>Payment method</label>
+          <div class="pay-methods" id="depositPayMethods">
+            <button type="button" class="pay-btn" data-method="bkash">bKash</button>
+            <button type="button" class="pay-btn" data-method="nagad">Nagad</button>
+            <button type="button" class="pay-btn" data-method="rocket">Rocket</button>
+          </div>
+          <div class="pay-instructions" id="depositPayInstructions"></div>
+        </div>
+
+        <div class="field">
+          <label for="depositSenderInput">Number you sent money from</label>
+          <input type="tel" id="depositSenderInput" required maxlength="20" placeholder="01XXXXXXXXX">
+        </div>
+
+        <div class="field">
+          <label for="depositTxnInput">Transaction ID</label>
+          <input type="text" id="depositTxnInput" required maxlength="40" placeholder="e.g. 8N7X2K1A9B">
+        </div>
+
+        <p class="form-error" id="depositFormError">Please fill in every field and choose a payment method.</p>
+
+        <button type="submit" class="submit-btn">Submit deposit</button>
+      </form>
+    </div>
+
+    <div class="success-view" id="depositSuccessView">
+      <svg class="success-check" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="#48A87C" stroke-width="2"/><path d="M15 27 L22 34 L37 18" stroke="#48A87C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Deposit submitted!</h3>
+      <p>We verify these manually — your balance will update once it's approved. Usually 10–30 minutes.</p>
+      <button type="button" class="submit-btn" id="closeDepositSuccess">Done</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Hidden admin access: open with #admin in the URL or Ctrl+Shift+A. Not linked anywhere in the UI.
+     Gated entirely by Firebase login — only the email(s) in CONFIG.adminEmails get in. -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-top">
+    <div class="title">GemBazar <span class="admin-tag">Admin</span></div>
+    <div class="admin-top-actions">
+      <button class="admin-icon-btn" id="adminExportBtn">Export CSV</button>
+      <button class="admin-icon-btn danger" id="adminClearBtn">Clear all</button>
+      <button class="admin-icon-btn" id="adminLogoutBtn">Log out</button>
+      <button class="admin-icon-btn" id="adminCloseBtn">Close</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-stats" id="adminStats"></div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
+        <h3>Banned accounts</h3>
+        <div class="admin-ban-add">
+          <input type="email" id="banEmailInput" placeholder="email@example.com">
+          <button type="button" id="banEmailBtn">Ban</button>
+        </div>
+      </div>
+      <div id="bannedList"></div>
+    </div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
+        <h3>Access alerts</h3>
+      </div>
+      <p class="admin-note-small">Anyone other than the admin account who triggers the hidden admin panel is signed out and banned automatically. They show up here so you can double-check and unban if it was a mistake.</p>
+      <div id="alertsList"></div>
+    </div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
+        <h3>Deposit requests</h3>
+      </div>
+      <p class="admin-note-small">Approve credits the amount straight to that account's wallet balance. Reject leaves their balance untouched.</p>
+      <div class="admin-order-list" id="depositsList"></div>
+    </div>
+
+    <div class="admin-toolbar">
+      <input type="text" class="admin-search" id="adminSearch" maxlength="60" placeholder="Search by order ID, number, or package">
+      <div class="admin-filter-tabs" id="adminFilterTabs">
+        <button class="tab-btn active" data-status="all">All</button>
+        <button class="tab-btn" data-status="pending_verification">Pending</button>
+        <button class="tab-btn" data-status="delivered">Delivered</button>
+        <button class="tab-btn" data-status="rejected">Rejected</button>
+      </div>
+    </div>
+    <div class="admin-order-list" id="adminOrderList"></div>
+  </div>
+</div>
+
+<!-- Firebase Auth. Fill in FIREBASE_CONFIG below with your own project's keys (Firebase Console > Project settings). -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<!-- Optional: EmailJS, used only to email you when someone who isn't the admin account triggers the admin panel. See CONFIG.emailAlerts below. Safe to leave as-is if you don't want this. -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============ EDIT THIS SECTION FOR YOUR OWN BUSINESS ============ */
+  const CONFIG = {
+    whatsapp: "8801XXXXXXXXX", // TODO: replace with your WhatsApp support number (no + or spaces)
+    adminEmails: ["zihadmoon8@gmail.com"], // Only these Firebase accounts can open the admin panel. There is no other way in — no PIN fallback.
+    protectedEmails: ["zihadmoon8@gmail.com"], // These accounts can never be banned, whether from the admin panel or by editing Firestore data directly.
+    payment: {
+      bkash:  { label: "bKash",  number: "01XXXXXXXXX", type: "Personal" },
+      nagad:  { label: "Nagad",  number: "01XXXXXXXXX", type: "Personal" },
+      rocket: { label: "Rocket", number: "01XXXXXXXXX-X", type: "Personal" }
+    },
+    // OPTIONAL: sends you a real email via EmailJS (emailjs.com — free tier available, no backend needed)
+    // whenever someone other than an admin account triggers the hidden admin panel. Leave enabled: false
+    // to skip this — the attempt still gets logged inside the admin panel's Access alerts either way.
+    // Setup: create a free EmailJS account -> Email Service -> Email Template (with {{intruder_email}}
+    // and {{attempted_at}} variables) -> paste the three IDs below -> set enabled to true.
+    emailAlerts: {
+      enabled: false,
+      serviceId: "YOUR_EMAILJS_SERVICE_ID",
+      templateId: "YOUR_EMAILJS_TEMPLATE_ID",
+      publicKey: "YOUR_EMAILJS_PUBLIC_KEY",
+      notifyEmail: "zihadmoon8@gmail.com"
+    }
+  };
+
+  // Firebase Console > Project settings > General > Your apps > SDK setup and configuration.
+  // Still needed before this is fully live: 1) turn on Email/Password sign-in under Authentication
+  // > Sign-in method. 2) create a Firestore database under Build > Firestore Database > Create
+  // database. 3) paste the security rules (firestore.rules from earlier) into Firestore Database >
+  // Rules, then Publish. Nothing here works safely until the rules are published.
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDAoos_gjpcJoUBibEJbm2wuuOGaDgJ5rA",
+    authDomain: "gembazar-6cdd3.firebaseapp.com",
+    projectId: "gembazar-6cdd3",
+    appId: "1:522742815317:web:cc1e408bb63a6378e852dc"
+  };
+
+  let firebaseReady = false;
+  let auth = null;
+  let db = null;
+  try{
+    if(FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY" && window.firebase){
+      firebase.initializeApp(FIREBASE_CONFIG);
+      auth = firebase.auth();
+      db = firebase.firestore();
+      firebaseReady = true;
+    }
+  } catch(err){
+    console.warn("Firebase not initialized:", err);
+  }
+
+  let emailAlertsReady = false;
+  try{
+    if(CONFIG.emailAlerts.enabled && CONFIG.emailAlerts.publicKey !== "YOUR_EMAILJS_PUBLIC_KEY" && window.emailjs){
+      emailjs.init({ publicKey: CONFIG.emailAlerts.publicKey });
+      emailAlertsReady = true;
+    }
+  } catch(err){
+    console.warn("EmailJS not initialized:", err);
+  }
+
+  function notifyAdminOfIntrusion(intruderEmail){
+    if(!emailAlertsReady) return;
+    emailjs.send(CONFIG.emailAlerts.serviceId, CONFIG.emailAlerts.templateId, {
+      to_email: CONFIG.emailAlerts.notifyEmail,
+      intruder_email: intruderEmail,
+      attempted_at: new Date().toLocaleString()
+    }).catch(err => console.warn("Admin alert email failed:", err));
+  }
+
+  const CATALOG = [
+    {
+      id: "freefire", label: "Free Fire", accent: "ruby", tagClass: "tag-ruby",
+      idLabel: "Free Fire Player ID",
+      icon: 'diamond',
+      items: [
+        { name: "25 Diamonds", price: 25 },
+        { name: "50 Diamonds", price: 49 },
+        { name: "115 Diamonds", price: 109 },
+        { name: "240 Diamonds", price: 219 },
+        { name: "355 Diamonds", price: 319 },
+        { name: "610 Diamonds", price: 539 },
+        { name: "1090 Diamonds", price: 949 },
+        { name: "2200 Diamonds", price: 1899 },
+        { name: "Weekly Membership", price: 159 },
+        { name: "Monthly Membership", price: 759 }
+      ]
+    },
+    {
+      id: "pubg", label: "PUBG Mobile", accent: "sapphire", tagClass: "tag-sapphire",
+      idLabel: "PUBG UID & Zone ID",
+      icon: "helmet",
+      items: [
+        { name: "60 UC", price: 89 },
+        { name: "325 UC", price: 449 },
+        { name: "660 UC", price: 869 },
+        { name: "1800 UC", price: 2299 },
+        { name: "3850 UC", price: 4799 },
+        { name: "8100 UC", price: 9499 }
+      ]
+    },
+    {
+      id: "tiktok", label: "TikTok Growth", accent: "emerald", tagClass: "tag-emerald",
+      idLabel: "TikTok profile link",
+      icon: "growth",
+      items: [
+        { name: "100 Followers", price: 149 },
+        { name: "500 Followers", price: 649 },
+        { name: "1000 Followers", price: 1199 },
+        { name: "1000 Likes", price: 199 },
+        { name: "5000 Likes", price: 799 }
+      ]
+    },
+    {
+      id: "facebook", label: "Facebook Growth", accent: "emerald", tagClass: "tag-emerald",
+      idLabel: "Facebook page/profile link",
+      icon: "growth",
+      items: [
+        { name: "100 Page Likes", price: 199 },
+        { name: "500 Page Likes", price: 849 },
+        { name: "1000 Followers", price: 999 }
+      ]
+    },
+    {
+      id: "instagram", label: "Instagram Growth", accent: "emerald", tagClass: "tag-emerald",
+      idLabel: "Instagram username",
+      icon: "growth",
+      items: [
+        { name: "100 Followers", price: 149 },
+        { name: "500 Followers", price: 599 },
+        { name: "1000 Followers", price: 1099 },
+        { name: "1000 Likes", price: 149 }
+      ]
+    }
+  ];
+  /* =================================================================== */
+
+  // MY_ORDERS_KEY stays local — it's just a convenience list of order IDs this browser has
+  // placed, mainly useful for guests (who have no logged-in "my orders" list from Firestore).
+  const MY_ORDERS_KEY = "gembazar_my_orders";
+
+  const icons = {
+    diamond: '<svg class="ticket-icon" viewBox="0 0 24 24" fill="none"><path d="M12 3 L20 9 L12 21 L4 9 Z" fill="#E14360"/><path d="M12 3 L20 9 L12 11 Z" fill="#FF8598"/></svg>',
+    helmet: '<svg class="ticket-icon" viewBox="0 0 24 24" fill="none"><path d="M4 14a8 8 0 0 1 16 0v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" fill="#4C86C6"/><rect x="9" y="17" width="6" height="3" rx="1" fill="#8FBBED"/></svg>',
+    growth: '<svg class="ticket-icon" viewBox="0 0 24 24" fill="none"><path d="M3 17 L9 11 L13 15 L21 6" stroke="#48A87C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6 H21 V12" stroke="#48A87C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  };
+
+  function fmtBDT(n){ return "৳" + n.toLocaleString("en-BD"); }
+
+  // Anything a customer typed (Player ID, sender number, transaction ID, search terms, etc.) gets
+  // rendered back into the page in the admin panel and elsewhere. Without escaping, someone could
+  // type HTML/JS into one of those fields and have it run in whoever views that data — most
+  // dangerously, in the admin's browser. Always pass user-entered text through this first.
+  function escapeHtml(str){
+    return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  // Only the admin account (CONFIG.adminEmails) — checked both here (for UI) and, more importantly,
+  // in the Firestore security rules themselves (for real enforcement). Never trust the client alone.
+  function isAdmin(user){
+    user = user || currentUser;
+    return !!(user && CONFIG.adminEmails.includes(user.email));
+  }
+
+  function tsToIso(ts){
+    if(ts && typeof ts.toDate === "function") return ts.toDate().toISOString();
+    return ts || new Date().toISOString();
+  }
+  function normalizeOrder(id, data){
+    return { ...data, id, createdAt: tsToIso(data.createdAt) };
+  }
+
+  /* ---------- Orders (Firestore) ---------- */
+  async function fetchAllOrders(){
+    if(!db) return [];
+    const snap = await db.collection("orders").get();
+    const orders = snap.docs.map(d => normalizeOrder(d.id, d.data()));
+    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return orders;
+  }
+  async function fetchMyOrders(uid){
+    if(!db || !uid) return [];
+    const snap = await db.collection("orders").where("uid", "==", uid).get();
+    const orders = snap.docs.map(d => normalizeOrder(d.id, d.data()));
+    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return orders;
+  }
+  async function fetchOrderById(id){
+    if(!db) return null;
+    const doc = await db.collection("orders").doc(id.trim().toUpperCase()).get();
+    return doc.exists ? normalizeOrder(doc.id, doc.data()) : null;
+  }
+  async function createOrderDoc(order){
+    const { id, ...data } = order;
+    await db.collection("orders").doc(id).set({
+      ...data,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+  async function updateOrderStatus(id, status){
+    await db.collection("orders").doc(id).update({ status });
+  }
+  async function deleteOrderDoc(id){
+    await db.collection("orders").doc(id).delete();
+  }
+
+  function loadMyOrders(){
+    try{ return JSON.parse(localStorage.getItem(MY_ORDERS_KEY)) || []; }
+    catch(e){ return []; }
+  }
+  function saveMyOrders(list){
+    localStorage.setItem(MY_ORDERS_KEY, JSON.stringify(list));
+  }
+
+  function genOrderId(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let suffix = "";
+    for(let i=0;i<6;i++) suffix += chars[Math.floor(Math.random()*chars.length)];
+    return "GB-" + suffix;
+  }
+
+  /* ---------- Render: WhatsApp links ---------- */
+  document.getElementById("whatsappLink").href = "https://wa.me/" + CONFIG.whatsapp;
+  document.getElementById("whatsappLink2").href = "https://wa.me/" + CONFIG.whatsapp;
+
+  /* ---------- Render: marquee ---------- */
+  const marqueeItems = [
+    "Free Fire Diamonds", "PUBG Mobile UC", "TikTok Followers",
+    "Facebook Page Likes", "Instagram Followers", "Verified by hand",
+    "bKash", "Nagad", "Rocket"
+  ];
+  const marqueeHtml = marqueeItems.map(t => `<span class="marquee-item"><span class="marquee-dot">◆</span><b>${t}</b></span>`).join("");
+  document.getElementById("marqueeTrack").innerHTML = marqueeHtml + marqueeHtml;
+
+  /* ---------- Render: category tabs ---------- */
+  const tabsRow = document.getElementById("catTabsRow");
+  let tabsHtml = `<button class="tab-btn active" data-cat="all">All</button>`;
+  CATALOG.forEach(cat => {
+    tabsHtml += `<button class="tab-btn" data-cat="${cat.id}">${cat.label}</button>`;
+  });
+  tabsRow.innerHTML = tabsHtml;
+
+  tabsRow.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab-btn");
+    if(!btn) return;
+    tabsRow.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const target = btn.dataset.cat;
+    document.querySelectorAll(".cat-section").forEach(sec => {
+      sec.style.display = (target === "all" || sec.dataset.cat === target) ? "" : "none";
+    });
+  });
+
+  /* ---------- Render: catalog ---------- */
+  const catalogEl = document.getElementById("catalog");
+  let catalogHtml = "";
+  CATALOG.forEach((cat, catIndex) => {
+    catalogHtml += `
+      <section class="cat-section" data-cat="${cat.id}">
+        <div class="cat-section-head">
+          <div class="cat-icon-badge" style="background:rgba(255,255,255,.04);">${icons[cat.icon]}</div>
+          <div>
+            <h2>${cat.label}</h2>
+            <p>${cat.idLabel} required at checkout</p>
+          </div>
+        </div>
+        <div class="ticket-grid">
+          ${cat.items.map((item, itemIndex) => `
+            <div class="ticket">
+              <div class="ticket-top">
+                ${icons[cat.icon]}
+                <div class="ticket-name">${item.name}</div>
+                <span class="ticket-tag ${cat.tagClass}">${cat.label}</span>
+              </div>
+              <div class="ticket-perf"></div>
+              <div class="ticket-bottom">
+                <span class="ticket-price mono">${fmtBDT(item.price)}</span>
+                <button class="ticket-btn" data-cat-index="${catIndex}" data-item-index="${itemIndex}">Top Up</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  });
+  catalogEl.innerHTML = catalogHtml;
+
+  /* ---------- Modal logic ---------- */
+  const modal = document.getElementById("orderModal");
+  const orderFormView = document.getElementById("orderFormView");
+  const successView = document.getElementById("successView");
+  const orderForm = document.getElementById("orderForm");
+  const idLabel = document.getElementById("idLabel");
+  const playerIdInput = document.getElementById("playerIdInput");
+  const senderInput = document.getElementById("senderInput");
+  const txnInput = document.getElementById("txnInput");
+  const payMethods = document.getElementById("payMethods");
+  const payInstructions = document.getElementById("payInstructions");
+  const formError = document.getElementById("formError");
+  const sumName = document.getElementById("sumName");
+  const sumCat = document.getElementById("sumCat");
+  const sumPrice = document.getElementById("sumPrice");
+
+  let currentSelection = null;
+  let selectedMethod = null;
+
+  function openModal(catIndex, itemIndex){
+    if(currentUserProfile && currentUserProfile.banned){
+      showToast("This account can't place orders. Contact support if you think that's a mistake.");
+      return;
+    }
+    const cat = CATALOG[catIndex];
+    const item = cat.items[itemIndex];
+    currentSelection = { cat, item };
+    selectedMethod = null;
+
+    sumName.textContent = item.name;
+    sumCat.textContent = cat.label;
+    sumPrice.textContent = fmtBDT(item.price);
+    idLabel.textContent = cat.idLabel;
+    playerIdInput.value = "";
+    senderInput.value = "";
+    txnInput.value = "";
+    formError.classList.remove("show");
+    payInstructions.classList.remove("show");
+    payMethods.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+
+    orderFormView.style.display = "";
+    successView.classList.remove("show");
+    modal.classList.add("open");
+  }
+
+  function closeModal(){
+    modal.classList.remove("open");
+  }
+
+  catalogEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".ticket-btn");
+    if(!btn) return;
+    openModal(Number(btn.dataset.catIndex), Number(btn.dataset.itemIndex));
+  });
+
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
+
+  payMethods.addEventListener("click", (e) => {
+    const btn = e.target.closest(".pay-btn");
+    if(!btn) return;
+    selectedMethod = btn.dataset.method;
+    payMethods.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const info = CONFIG.payment[selectedMethod];
+    payInstructions.innerHTML = `Send <b>${sumPrice.textContent}</b> to <b>${info.number}</b> (${info.type}) using ${info.label}'s <b>Send Money</b> option. Then enter the sender number and transaction ID below.`;
+    payInstructions.classList.add("show");
+  });
+
+  orderForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(!db){
+      formError.textContent = "Ordering isn't set up yet — add your Firebase config in the script.";
+      formError.classList.add("show");
+      return;
+    }
+    if(currentUserProfile && currentUserProfile.banned){
+      closeModal();
+      showToast("This account can't place orders. Contact support if you think that's a mistake.");
+      return;
+    }
+    if(!playerIdInput.value.trim() || !senderInput.value.trim() || !txnInput.value.trim() || !selectedMethod){
+      formError.textContent = "Please fill in every field and choose a payment method.";
+      formError.classList.add("show");
+      return;
+    }
+
+    const txnId = txnInput.value.trim();
+    const methodLabel = CONFIG.payment[selectedMethod].label;
+    const submitBtn = orderForm.querySelector(".submit-btn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
+
+    try{
+      // Duplicate-transaction check only covers the logged-in user's own past orders — Firestore's
+      // rules (by design) don't let a regular customer query every order to catch a fabricated ID
+      // reused across different accounts. That case is still caught by the admin's manual review.
+      if(currentUser){
+        const mineSoFar = await fetchMyOrders(currentUser.uid);
+        const duplicate = mineSoFar.some(o =>
+          o.transactionId.toLowerCase() === txnId.toLowerCase() && o.paymentMethod === methodLabel
+        );
+        if(duplicate){
+          formError.textContent = "That transaction ID has already been submitted. If this is a mistake, contact support instead of resubmitting.";
+          formError.classList.add("show");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit order";
+          return;
+        }
+      }
+      formError.classList.remove("show");
+
+      const orderId = genOrderId();
+      const order = {
+        id: orderId,
+        category: currentSelection.cat.label,
+        package: currentSelection.item.name,
+        price: currentSelection.item.price,
+        playerId: playerIdInput.value.trim(),
+        paymentMethod: methodLabel,
+        senderNumber: senderInput.value.trim(),
+        transactionId: txnId,
+        status: "pending_verification",
+        paidFromWallet: false,
+        uid: currentUser ? currentUser.uid : null,
+        accountEmail: currentUser ? currentUser.email : null
+      };
+      await createOrderDoc(order);
+
+      const mine = loadMyOrders();
+      mine.unshift(orderId);
+      saveMyOrders(mine.slice(0, 8));
+
+      document.getElementById("successOrderId").textContent = orderId;
+      orderFormView.style.display = "none";
+      successView.classList.add("show");
+      renderRecentOrders();
+    } catch(err){
+      console.error(err);
+      formError.textContent = "Couldn't submit the order — check your connection and try again.";
+      formError.classList.add("show");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit order";
+    }
+  });
+
+  document.getElementById("copyOrderId").addEventListener("click", () => {
+    const id = document.getElementById("successOrderId").textContent;
+    navigator.clipboard?.writeText(id).then(() => showToast("Order ID copied"));
+  });
+
+  document.getElementById("closeSuccess").addEventListener("click", closeModal);
+  document.getElementById("trackThisOrder").addEventListener("click", () => {
+    const id = document.getElementById("successOrderId").textContent;
+    closeModal();
+    document.getElementById("trackInput").value = id;
+    document.getElementById("track").scrollIntoView({ behavior: "smooth" });
+    runTrack(id);
+  });
+
+  /* ---------- Add money (wallet deposits) ---------- */
+  const addMoneyModal = document.getElementById("addMoneyModal");
+  const addMoneyFormView = document.getElementById("addMoneyFormView");
+  const depositSuccessView = document.getElementById("depositSuccessView");
+  const addMoneyForm = document.getElementById("addMoneyForm");
+  const depositAmountInput = document.getElementById("depositAmountInput");
+  const depositSenderInput = document.getElementById("depositSenderInput");
+  const depositTxnInput = document.getElementById("depositTxnInput");
+  const depositPayMethods = document.getElementById("depositPayMethods");
+  const depositPayInstructions = document.getElementById("depositPayInstructions");
+  const depositFormError = document.getElementById("depositFormError");
+  let depositSelectedMethod = null;
+
+  function openAddMoneyModal(){
+    if(!currentUser){
+      showToast("Log in first to add money");
+      openAuthModal("login");
+      return;
+    }
+    depositAmountInput.value = "";
+    depositSenderInput.value = "";
+    depositTxnInput.value = "";
+    depositSelectedMethod = null;
+    depositFormError.classList.remove("show");
+    depositPayInstructions.classList.remove("show");
+    depositPayMethods.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+    addMoneyFormView.style.display = "";
+    depositSuccessView.classList.remove("show");
+    addMoneyModal.classList.add("open");
+  }
+  function closeAddMoneyModal(){ addMoneyModal.classList.remove("open"); }
+
+  document.getElementById("addMoneyClose").addEventListener("click", closeAddMoneyModal);
+  addMoneyModal.addEventListener("click", (e) => { if(e.target === addMoneyModal) closeAddMoneyModal(); });
+  document.getElementById("closeDepositSuccess").addEventListener("click", closeAddMoneyModal);
+
+  depositPayMethods.addEventListener("click", (e) => {
+    const btn = e.target.closest(".pay-btn");
+    if(!btn) return;
+    depositSelectedMethod = btn.dataset.method;
+    depositPayMethods.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const info = CONFIG.payment[depositSelectedMethod];
+    const amount = Number(depositAmountInput.value) || 0;
+    depositPayInstructions.innerHTML = `Send <b>${fmtBDT(amount)}</b> to <b>${info.number}</b> (${info.type}) using ${info.label}'s <b>Send Money</b> option. Then enter the sender number and transaction ID below.`;
+    depositPayInstructions.classList.add("show");
+  });
+
+  addMoneyForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(!db){
+      depositFormError.textContent = "Not set up yet — add your Firebase config in the script.";
+      depositFormError.classList.add("show");
+      return;
+    }
+    const amount = Number(depositAmountInput.value);
+    if(!amount || amount < 20 || !depositSenderInput.value.trim() || !depositTxnInput.value.trim() || !depositSelectedMethod){
+      depositFormError.textContent = "Please fill in every field (minimum ৳20) and choose a payment method.";
+      depositFormError.classList.add("show");
+      return;
+    }
+    depositFormError.classList.remove("show");
+
+    const submitBtn = addMoneyForm.querySelector(".submit-btn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
+    try{
+      const depositId = "DEP-" + genOrderId().slice(3);
+      await db.collection("deposits").doc(depositId).set({
+        id: depositId,
+        uid: currentUser.uid,
+        accountEmail: currentUser.email,
+        amount,
+        paymentMethod: CONFIG.payment[depositSelectedMethod].label,
+        senderNumber: depositSenderInput.value.trim(),
+        transactionId: depositTxnInput.value.trim(),
+        status: "pending_verification",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      addMoneyFormView.style.display = "none";
+      depositSuccessView.classList.add("show");
+    } catch(err){
+      console.error(err);
+      depositFormError.textContent = "Couldn't submit — check your connection and try again.";
+      depositFormError.classList.add("show");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit deposit";
+    }
+  });
+
+  /* ---------- Track order ---------- */
+  const trackInput = document.getElementById("trackInput");
+  const trackResult = document.getElementById("trackResult");
+
+  function statusLabel(status){
+    if(status === "delivered") return '<span class="status-pill status-delivered">Delivered</span>';
+    if(status === "rejected") return '<span class="status-pill status-rejected">Rejected</span>';
+    return '<span class="status-pill status-pending">Pending verification</span>';
+  }
+
+  function orderCardHtml(found){
+    return `
+      <div class="order-card">
+        <div class="order-card-row"><span>Order ID</span><span class="mono">${escapeHtml(found.id)}</span></div>
+        <div class="order-card-row"><span>Package</span><span>${escapeHtml(found.package)} (${escapeHtml(found.category)})</span></div>
+        <div class="order-card-row"><span>Amount</span><span class="mono">${fmtBDT(found.price)}</span></div>
+        <div class="order-card-row"><span>Paid via</span><span>${escapeHtml(found.paymentMethod)}</span></div>
+        <div class="order-card-row"><span>Submitted</span><span>${new Date(found.createdAt).toLocaleString()}</span></div>
+        <div class="order-card-row"><span>Status</span>${statusLabel(found.status)}</div>
+      </div>
+    `;
+  }
+
+  async function runTrack(query){
+    query = (query || "").trim();
+    if(!query){ trackResult.innerHTML = ""; return; }
+    if(!db){
+      trackResult.innerHTML = '<p class="status-notfound">Tracking isn\'t set up yet — add your Firebase config in the script.</p>';
+      return;
+    }
+    trackResult.innerHTML = '<p class="status-notfound">Looking that up…</p>';
+    try{
+      const found = await fetchOrderById(query);
+      if(!found){
+        trackResult.innerHTML = `<p class="status-notfound">No order found for "${escapeHtml(query)}". Double-check the Order ID.</p>`;
+        return;
+      }
+      trackResult.innerHTML = orderCardHtml(found);
+    } catch(err){
+      console.error(err);
+      trackResult.innerHTML = '<p class="status-notfound">Couldn\'t look that up — check your connection and try again.</p>';
+    }
+  }
+
+  document.getElementById("trackBtn").addEventListener("click", () => runTrack(trackInput.value));
+  trackInput.addEventListener("keydown", (e) => { if(e.key === "Enter") runTrack(trackInput.value); });
+
+  async function renderMyOrders(){
+    const wrap = document.getElementById("myOrdersSection");
+    const list = document.getElementById("myOrdersList");
+    if(!currentUser || !db){ wrap.style.display = "none"; return; }
+    wrap.style.display = "";
+    list.innerHTML = '<p class="admin-empty-small">Loading…</p>';
+    try{
+      const orders = await fetchMyOrders(currentUser.uid);
+      if(orders.length === 0){
+        list.innerHTML = '<p class="admin-empty-small">No orders on this account yet.</p>';
+        return;
+      }
+      list.innerHTML = orders.map(o => `
+        <div class="order-row-mini">
+          <div class="left">
+            <span class="oid-mini">${escapeHtml(o.id)}</span>
+            <span>${escapeHtml(o.package)} — ${fmtBDT(o.price)}</span>
+          </div>
+          ${statusLabel(o.status)}
+        </div>
+      `).join("");
+    } catch(err){
+      console.error(err);
+      list.innerHTML = '<p class="admin-empty-small">Couldn\'t load your orders right now.</p>';
+    }
+  }
+
+  function renderRecentOrders(){
+    const mine = loadMyOrders();
+    const wrap = document.getElementById("recentOrders");
+    const row = document.getElementById("recentOrdersRow");
+    if(mine.length === 0){ wrap.style.display = "none"; return; }
+    wrap.style.display = "";
+    row.innerHTML = mine.map(id => `<button class="chip" data-id="${id}">${id}</button>`).join("");
+  }
+  document.getElementById("recentOrdersRow").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if(!chip) return;
+    trackInput.value = chip.dataset.id;
+    runTrack(chip.dataset.id);
+  });
+  renderRecentOrders();
+
+  /* ---------- Toast ---------- */
+  let toastTimer;
+  function showToast(msg){
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+  }
+
+  /* ---------- Auth (Firebase email/password login + register) ---------- */
+  let currentUser = null;
+  let currentUserProfile = null; // { email, walletBalance, banned } — kept in sync live via Firestore
+  let profileUnsubscribe = null;
+  let pendingAdminRequest = false;
+  const authSlot = document.getElementById("authSlot");
+  const authModal = document.getElementById("authModal");
+  const authForm = document.getElementById("authForm");
+  const authEmail = document.getElementById("authEmail");
+  const authPassword = document.getElementById("authPassword");
+  const authError = document.getElementById("authError");
+  const authModalTitle = document.getElementById("authModalTitle");
+  const authNote = document.getElementById("authNote");
+  const authSubmitBtn = document.getElementById("authSubmitBtn");
+  let authMode = "login";
+
+  // Creates the Firestore profile doc the first time an account is seen. Forced to start at
+  // balance 0 / not banned — the security rules only allow this exact shape on create, so a
+  // customer can't hand-craft a starting balance for themselves.
+  async function ensureUserProfile(user){
+    if(!db) return;
+    const ref = db.collection("users").doc(user.uid);
+    const snap = await ref.get();
+    if(!snap.exists){
+      await ref.set({ email: user.email, walletBalance: 0, banned: false, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    }
+  }
+
+  function subscribeToProfile(user){
+    if(profileUnsubscribe) profileUnsubscribe();
+    profileUnsubscribe = db.collection("users").doc(user.uid).onSnapshot((snap) => {
+      currentUserProfile = snap.exists ? snap.data() : null;
+      renderAuthSlot();
+      // If the admin bans this account mid-session, sign them out right away rather than
+      // waiting for their next page load.
+      if(currentUserProfile && currentUserProfile.banned && !isAdmin(user)){
+        auth.signOut();
+        showToast("This account has been suspended.");
+      }
+    }, (err) => console.warn("Profile sync error:", err));
+  }
+
+  function renderAuthSlot(){
+    if(currentUser){
+      const balance = currentUserProfile ? fmtBDT(currentUserProfile.walletBalance || 0) : "…";
+      authSlot.innerHTML = `
+        <span class="user-chip">
+          <button type="button" class="wallet-pill" id="walletBalanceBtn" title="Add money">${balance}</button>
+          <span class="email" title="${escapeHtml(currentUser.email)}">${escapeHtml(currentUser.email)}</span>
+          <button type="button" id="authLogoutBtn">Log out</button>
+        </span>
+      `;
+      document.getElementById("authLogoutBtn").addEventListener("click", () => {
+        auth.signOut();
+      });
+      document.getElementById("walletBalanceBtn").addEventListener("click", openAddMoneyModal);
+    } else {
+      authSlot.innerHTML = `<button type="button" class="btn-auth" id="authOpenBtn">Log in</button>`;
+      document.getElementById("authOpenBtn").addEventListener("click", () => openAuthModal("login"));
+    }
+  }
+
+  // Firebase resolves any existing session asynchronously. We wait for its first callback
+  // before acting on a #admin URL, so an already-logged-in admin reloading the page isn't
+  // wrongly treated as logged out for a moment and bounced into the login form.
+  let authStateResolved = false;
+  if(firebaseReady){
+    auth.onAuthStateChanged(async (user) => {
+      currentUser = user;
+      if(user && db){
+        await ensureUserProfile(user);
+        subscribeToProfile(user);
+      } else {
+        if(profileUnsubscribe){ profileUnsubscribe(); profileUnsubscribe = null; }
+        currentUserProfile = null;
+      }
+      renderAuthSlot();
+      renderMyOrders();
+      if(!authStateResolved){
+        authStateResolved = true;
+        if(location.hash === "#admin") requestAdminAccess();
+      }
+    });
+  } else {
+    renderAuthSlot();
+    if(location.hash === "#admin") requestAdminAccess();
+  }
+
+  function setAuthMode(mode){
+    authMode = mode;
+    document.querySelectorAll(".auth-tab").forEach(t => t.classList.toggle("active", t.dataset.mode === mode));
+    if(mode === "login"){
+      authModalTitle.textContent = "Log in";
+      authSubmitBtn.textContent = "Log in";
+      authPassword.autocomplete = "current-password";
+      authNote.textContent = "Log in to have your email attached to orders you place, so support can find you faster.";
+    } else {
+      authModalTitle.textContent = "Create account";
+      authSubmitBtn.textContent = "Create account";
+      authPassword.autocomplete = "new-password";
+      authNote.textContent = "Registering is optional — you can still order as a guest. An account just makes support easier.";
+    }
+    authError.classList.remove("show");
+  }
+
+  function openAuthModal(mode){
+    if(!firebaseReady){
+      showToast("Login isn't set up yet — add your Firebase config in the script");
+      return;
+    }
+    authEmail.value = "";
+    authPassword.value = "";
+    setAuthMode(mode);
+    authModal.classList.add("open");
+    setTimeout(() => authEmail.focus(), 50);
+  }
+  function closeAuthModal(){ authModal.classList.remove("open"); }
+
+  document.querySelectorAll(".auth-tab").forEach(tab => {
+    tab.addEventListener("click", () => setAuthMode(tab.dataset.mode));
+  });
+  document.getElementById("authModalClose").addEventListener("click", () => { pendingAdminRequest = false; closeAuthModal(); });
+  authModal.addEventListener("click", (e) => { if(e.target === authModal){ pendingAdminRequest = false; closeAuthModal(); } });
+
+  function friendlyAuthError(code){
+    const map = {
+      "auth/email-already-in-use": "That email already has an account — try logging in instead.",
+      "auth/invalid-email": "That doesn't look like a valid email.",
+      "auth/weak-password": "Password should be at least 6 characters.",
+      "auth/user-not-found": "No account found with that email.",
+      "auth/wrong-password": "Incorrect password.",
+      "auth/invalid-credential": "Incorrect email or password.",
+      "auth/too-many-requests": "Too many attempts — please wait a bit and try again."
+    };
+    return map[code] || "Something went wrong. Please try again.";
+  }
+
+  authForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    authError.classList.remove("show");
+    const email = authEmail.value.trim();
+    const password = authPassword.value;
+    const action = authMode === "register"
+      ? auth.createUserWithEmailAndPassword(email, password)
+      : auth.signInWithEmailAndPassword(email, password);
+
+    authSubmitBtn.disabled = true;
+    action
+      .then((cred) => {
+        authSubmitBtn.disabled = false;
+        const wasAdminRequest = pendingAdminRequest;
+        pendingAdminRequest = false;
+        closeAuthModal();
+        showToast(authMode === "register" ? "Account created — you're logged in" : "Logged in");
+        if(wasAdminRequest) evaluateAdminIdentity(cred.user);
+      })
+      .catch((err) => {
+        authSubmitBtn.disabled = false;
+        authError.textContent = friendlyAuthError(err.code);
+        authError.classList.add("show");
+      });
+  });
+
+  document.getElementById("authForgotBtn").addEventListener("click", () => {
+    const email = authEmail.value.trim();
+    if(!email){
+      authError.textContent = "Enter your email above first, then tap this again.";
+      authError.classList.add("show");
+      return;
+    }
+    auth.sendPasswordResetEmail(email)
+      .then(() => showToast("Password reset email sent"))
+      .catch((err) => {
+        authError.textContent = friendlyAuthError(err.code);
+        authError.classList.add("show");
+      });
+  });
+
+  /* ---------- Admin panel (hidden: open with #admin in the URL, or Ctrl+Shift+A) ---------- */
+  const adminOverlay = document.getElementById("adminOverlay");
+  let adminStatusFilter = "all";
+  let adminSearchQuery = "";
+  let adminUsersCache = new Map(); // uid -> {uid, email, walletBalance, banned}
+
+  async function fetchAllUsers(){
+    if(!db) return new Map();
+    const snap = await db.collection("users").get();
+    const map = new Map();
+    snap.docs.forEach(d => map.set(d.id, { uid: d.id, ...d.data() }));
+    return map;
+  }
+  async function fetchAllDeposits(){
+    if(!db) return [];
+    const snap = await db.collection("deposits").get();
+    const deposits = snap.docs.map(d => ({ id: d.id, ...d.data(), createdAt: tsToIso(d.data().createdAt) }));
+    deposits.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return deposits;
+  }
+
+  /* ---------- Bans (a `banned` field on each account's Firestore profile — real, cross-device) ---------- */
+  function isProtectedEmail(email){
+    return CONFIG.protectedEmails.some(e => e.toLowerCase() === (email || "").toLowerCase());
+  }
+  async function setBanStatus(uid, email, banned){
+    if(!uid || !db) return false;
+    if(banned && isProtectedEmail(email)){
+      showToast("This account can't be banned");
+      return false;
+    }
+    await db.collection("users").doc(uid).update({ banned });
+    return true;
+  }
+  function banButtonHtml(uid, email){
+    if(!uid || !email) return "";
+    if(isProtectedEmail(email)) return `<span class="protected-badge" title="This account can't be banned">Protected</span>`;
+    const user = adminUsersCache.get(uid);
+    const banned = !!(user && user.banned);
+    return `<button data-ban-uid="${escapeHtml(uid)}" data-ban-email="${escapeHtml(email)}" class="${banned ? "current" : ""}">${banned ? "Unban" : "Ban"}</button>`;
+  }
+  function renderBannedPanel(){
+    const wrap = document.getElementById("bannedList");
+    const banned = [...adminUsersCache.values()].filter(u => u.banned);
+    if(banned.length === 0){
+      wrap.innerHTML = '<p class="admin-empty-small">No banned accounts.</p>';
+      return;
+    }
+    wrap.innerHTML = banned.map(u => `
+      <div class="banned-row">
+        <span>${escapeHtml(u.email)}</span>
+        <button type="button" data-unban-uid="${escapeHtml(u.uid)}">Unban</button>
+      </div>
+    `).join("");
+  }
+  document.getElementById("banEmailBtn").addEventListener("click", async () => {
+    const input = document.getElementById("banEmailInput");
+    const email = input.value.trim();
+    if(!email){ showToast("Enter an email to ban"); return; }
+    const match = [...adminUsersCache.values()].find(u => (u.email || "").toLowerCase() === email.toLowerCase());
+    if(!match){ showToast("No account found with that email — they need to have registered at least once"); return; }
+    if(await setBanStatus(match.uid, match.email, true)){
+      input.value = "";
+      showToast("Account banned");
+      renderAdmin();
+    }
+  });
+  document.getElementById("bannedList").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-unban-uid]");
+    if(!btn) return;
+    await setBanStatus(btn.dataset.unbanUid, null, false);
+    showToast("Account unbanned");
+    renderAdmin();
+  });
+
+  /* ---------- Access alerts (Firestore now, not localStorage — so these actually reach you on any device) ---------- */
+  async function logAccessAttempt(email, uid){
+    if(!db) return;
+    await db.collection("accessAlerts").add({ email, uid, at: firebase.firestore.FieldValue.serverTimestamp() });
+  }
+  async function fetchAlerts(){
+    if(!db) return [];
+    const snap = await db.collection("accessAlerts").get();
+    const alerts = snap.docs.map(d => ({ id: d.id, ...d.data(), at: tsToIso(d.data().at) }));
+    alerts.sort((a, b) => new Date(b.at) - new Date(a.at));
+    return alerts.slice(0, 30);
+  }
+  async function renderAlertsPanel(){
+    const wrap = document.getElementById("alertsList");
+    wrap.innerHTML = '<p class="admin-empty-small">Loading…</p>';
+    const alerts = await fetchAlerts();
+    if(alerts.length === 0){
+      wrap.innerHTML = '<p class="admin-empty-small">No access attempts logged.</p>';
+      return;
+    }
+    wrap.innerHTML = alerts.map(a => `
+      <div class="banned-row">
+        <span>${escapeHtml(a.email)} <span class="alert-time">— ${new Date(a.at).toLocaleString()}</span></span>
+        <button type="button" data-unban-uid="${escapeHtml(a.uid || "")}">Unban</button>
+      </div>
+    `).join("");
+  }
+  document.getElementById("alertsList").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-unban-uid]");
+    if(!btn || !btn.dataset.unbanUid) return;
+    await setBanStatus(btn.dataset.unbanUid, null, false);
+    showToast("Account unbanned");
+    renderAdmin();
+  });
+
+  // Access to the admin panel is gated entirely by Firebase identity — CONFIG.adminEmails is the
+  // only door. Anyone else who's logged in and triggers the hidden gate is signed out and banned
+  // on the spot, no PIN, no second try. If Firebase isn't configured yet there's no identity to
+  // check, so this can't run — see the toast below.
+  function clearAdminHash(){
+    if(location.hash === "#admin") history.replaceState(null, "", location.pathname + location.search);
+  }
+
+  function requestAdminAccess(){
+    if(!firebaseReady){
+      showToast("Admin login isn't set up yet — add your Firebase config in the script");
+      clearAdminHash();
+      return;
+    }
+    if(!currentUser){
+      pendingAdminRequest = true;
+      openAuthModal("login");
+      authNote.textContent = "Log in with the authorized admin account to continue.";
+      return;
+    }
+    evaluateAdminIdentity(currentUser);
+  }
+
+  async function evaluateAdminIdentity(user){
+    if(isAdmin(user)){
+      openAdminPanel();
+      return;
+    }
+    try{
+      await setBanStatus(user.uid, user.email, true);
+      await logAccessAttempt(user.email, user.uid);
+      notifyAdminOfIntrusion(user.email);
+    } catch(err){
+      console.error("Failed to log/ban intruder:", err);
+    } finally {
+      auth.signOut();
+      showToast("Access denied. This attempt has been logged.");
+      clearAdminHash();
+    }
+  }
+
+  function openAdminPanel(){
+    adminStatusFilter = "all";
+    adminSearchQuery = "";
+    document.getElementById("adminSearch").value = "";
+    document.querySelectorAll("#adminFilterTabs .tab-btn").forEach(b => b.classList.toggle("active", b.dataset.status === "all"));
+    renderAdmin();
+    adminOverlay.classList.add("open");
+  }
+  function closeAdminPanel(){
+    adminOverlay.classList.remove("open");
+    clearAdminHash();
+  }
+
+  document.getElementById("adminCloseBtn").addEventListener("click", closeAdminPanel);
+  document.getElementById("adminLogoutBtn").addEventListener("click", () => {
+    auth.signOut();
+    closeAdminPanel();
+  });
+
+  let adminOrdersCache = [];
+  let adminDepositsCache = [];
+
+  function renderAdminStats(){
+    const orders = adminOrdersCache;
+    const pending = orders.filter(o => o.status === "pending_verification").length;
+    const delivered = orders.filter(o => o.status === "delivered").length;
+    const revenue = orders.filter(o => o.status !== "rejected").reduce((sum, o) => sum + (o.price || 0), 0);
+    document.getElementById("adminStats").innerHTML = `
+      <div class="stat-card"><div class="num">${orders.length}</div><div class="lbl">Total orders</div></div>
+      <div class="stat-card"><div class="num">${pending}</div><div class="lbl">Pending</div></div>
+      <div class="stat-card"><div class="num">${delivered}</div><div class="lbl">Delivered</div></div>
+      <div class="stat-card"><div class="num">${fmtBDT(revenue)}</div><div class="lbl">Revenue (ex. rejected)</div></div>
+    `;
+  }
+
+  function renderAdminOrders(){
+    const list = document.getElementById("adminOrderList");
+    let orders = adminOrdersCache.slice();
+    if(adminStatusFilter !== "all"){
+      orders = orders.filter(o => o.status === adminStatusFilter);
+    }
+    if(adminSearchQuery){
+      const q = adminSearchQuery.toLowerCase();
+      orders = orders.filter(o =>
+        o.id.toLowerCase().includes(q) ||
+        o.senderNumber.toLowerCase().includes(q) ||
+        o.package.toLowerCase().includes(q) ||
+        o.playerId.toLowerCase().includes(q)
+      );
+    }
+    if(orders.length === 0){
+      list.innerHTML = '<div class="admin-empty">No orders match here.</div>';
+      return;
+    }
+    list.innerHTML = orders.map(o => `
+      <div class="admin-order-row">
+        <div class="admin-order-row-top">
+          <span class="oid">${escapeHtml(o.id)}</span>
+          ${statusLabel(o.status)}
+        </div>
+        <div class="admin-order-details">
+          <div><span class="k">Package</span><span>${escapeHtml(o.package)} (${escapeHtml(o.category)})</span></div>
+          <div><span class="k">Amount</span><span>${fmtBDT(o.price)}</span></div>
+          <div><span class="k">Player ID</span><span>${escapeHtml(o.playerId)}</span></div>
+          <div><span class="k">Account</span><span>${o.accountEmail ? escapeHtml(o.accountEmail) : "Guest"}</span></div>
+          <div><span class="k">Paid via</span><span>${escapeHtml(o.paymentMethod)}</span></div>
+          <div><span class="k">Sender number</span><span>${escapeHtml(o.senderNumber)}</span></div>
+          <div><span class="k">Transaction ID</span><span>${escapeHtml(o.transactionId)}</span></div>
+          <div><span class="k">Submitted</span><span>${new Date(o.createdAt).toLocaleString()}</span></div>
+        </div>
+        <div class="admin-order-actions">
+          <button data-action="pending_verification" data-id="${escapeHtml(o.id)}" class="${o.status === "pending_verification" ? "current" : ""}">Pending</button>
+          <button data-action="delivered" data-id="${escapeHtml(o.id)}" class="${o.status === "delivered" ? "current" : ""}">Delivered</button>
+          <button data-action="rejected" data-id="${escapeHtml(o.id)}" class="${o.status === "rejected" ? "current" : ""}">Rejected</button>
+          ${o.uid ? banButtonHtml(o.uid, o.accountEmail) : ""}
+          <button data-action="delete" data-id="${escapeHtml(o.id)}" class="delete">Delete</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderDepositsPanel(){
+    const list = document.getElementById("depositsList");
+    const pending = adminDepositsCache.filter(d => d.status === "pending_verification");
+    const others = adminDepositsCache.filter(d => d.status !== "pending_verification");
+    const ordered = [...pending, ...others];
+    if(ordered.length === 0){
+      list.innerHTML = '<div class="admin-empty">No deposit requests yet.</div>';
+      return;
+    }
+    list.innerHTML = ordered.map(d => `
+      <div class="admin-order-row">
+        <div class="admin-order-row-top">
+          <span class="oid">${escapeHtml(d.id)}</span>
+          ${statusLabel(d.status)}
+        </div>
+        <div class="admin-order-details">
+          <div><span class="k">Account</span><span>${escapeHtml(d.accountEmail)}</span></div>
+          <div><span class="k">Amount</span><span>${fmtBDT(d.amount)}</span></div>
+          <div><span class="k">Paid via</span><span>${escapeHtml(d.paymentMethod)}</span></div>
+          <div><span class="k">Sender number</span><span>${escapeHtml(d.senderNumber)}</span></div>
+          <div><span class="k">Transaction ID</span><span>${escapeHtml(d.transactionId)}</span></div>
+          <div><span class="k">Submitted</span><span>${new Date(d.createdAt).toLocaleString()}</span></div>
+        </div>
+        <div class="admin-order-actions">
+          <button data-deposit-action="approve" data-id="${escapeHtml(d.id)}" ${d.status !== "pending_verification" ? "disabled" : ""} class="${d.status === "delivered" ? "current" : ""}">Approve</button>
+          <button data-deposit-action="reject" data-id="${escapeHtml(d.id)}" ${d.status !== "pending_verification" ? "disabled" : ""} class="${d.status === "rejected" ? "current" : ""}">Reject</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("depositsList").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-deposit-action]");
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.depositAction;
+    const deposit = adminDepositsCache.find(d => d.id === id);
+    if(!deposit || deposit.status !== "pending_verification") return;
+    btn.disabled = true;
+    try{
+      if(action === "approve"){
+        // Atomic: credit the wallet and mark the deposit approved together, so a half-applied
+        // state (money added but request still shows pending, or vice versa) can't happen.
+        await db.runTransaction(async (tx) => {
+          const userRef = db.collection("users").doc(deposit.uid);
+          const userSnap = await tx.get(userRef);
+          const currentBalance = userSnap.exists ? (userSnap.data().walletBalance || 0) : 0;
+          tx.update(userRef, { walletBalance: currentBalance + deposit.amount });
+          tx.update(db.collection("deposits").doc(id), { status: "delivered" });
+        });
+        showToast("Deposit approved — balance credited");
+      } else {
+        await db.collection("deposits").doc(id).update({ status: "rejected" });
+        showToast("Deposit rejected");
+      }
+      renderAdmin();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+      btn.disabled = false;
+    }
+  });
+
+  async function renderAdmin(){
+    if(!db) return;
+    try{
+      const [users, orders, deposits] = await Promise.all([fetchAllUsers(), fetchAllOrders(), fetchAllDeposits()]);
+      adminUsersCache = users;
+      adminOrdersCache = orders;
+      adminDepositsCache = deposits;
+      renderAdminStats();
+      renderBannedPanel();
+      await renderAlertsPanel();
+      renderAdminOrders();
+      renderDepositsPanel();
+    } catch(err){
+      console.error("Admin panel failed to load:", err);
+      showToast("Couldn't load admin data — check your connection and Firestore rules");
+    }
+  }
+
+  document.getElementById("adminFilterTabs").addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab-btn");
+    if(!btn) return;
+    adminStatusFilter = btn.dataset.status;
+    document.querySelectorAll("#adminFilterTabs .tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderAdminOrders();
+  });
+
+  document.getElementById("adminSearch").addEventListener("input", (e) => {
+    adminSearchQuery = e.target.value.trim();
+    renderAdminOrders();
+  });
+
+  document.getElementById("adminOrderList").addEventListener("click", async (e) => {
+    const banBtn = e.target.closest("button[data-ban-uid]");
+    if(banBtn){
+      const uid = banBtn.dataset.banUid;
+      const email = banBtn.dataset.banEmail;
+      const user = adminUsersCache.get(uid);
+      const nowBanned = !(user && user.banned);
+      if(await setBanStatus(uid, email, nowBanned)){
+        showToast(nowBanned ? "Account banned" : "Account unbanned");
+        renderAdmin();
+      }
+      return;
+    }
+    const btn = e.target.closest("button[data-action]");
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    btn.disabled = true;
+    try{
+      if(action === "delete"){
+        if(!confirm("Delete order " + id + "? This can't be undone.")){ btn.disabled = false; return; }
+        await deleteOrderDoc(id);
+      } else {
+        await updateOrderStatus(id, action);
+      }
+      renderAdmin();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+      btn.disabled = false;
+    }
+  });
+
+  function csvField(value){
+    let s = String(value ?? "");
+    // A field starting with =, +, -, or @ can be read as a formula by Excel/Sheets when the
+    // CSV is opened — a customer could type one of these into Player ID, sender number, etc.
+    // Prefixing with a quote character forces it to be treated as plain text instead.
+    if(/^[=+\-@]/.test(s)) s = "'" + s;
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+
+  document.getElementById("adminExportBtn").addEventListener("click", () => {
+    const orders = adminOrdersCache;
+    if(orders.length === 0){ showToast("No orders to export"); return; }
+    const headers = ["id","createdAt","category","package","price","playerId","paymentMethod","senderNumber","transactionId","status"];
+    const rows = orders.map(o => headers.map(h => csvField(o[h])).join(","));
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "gembazar-orders.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("adminClearBtn").addEventListener("click", async () => {
+    if(!confirm("Clear ALL orders? This can't be undone.")) return;
+    const btn = document.getElementById("adminClearBtn");
+    btn.disabled = true;
+    try{
+      // Firestore has no "delete collection" call from the client — delete each doc in a batch.
+      const snap = await db.collection("orders").get();
+      const batch = db.batch();
+      snap.docs.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      renderAdmin();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // Hidden triggers: visit the page with #admin in the URL, or press Ctrl+Shift+A. Nothing in the visible UI links here.
+  // (The very first page-load check happens earlier, once Firebase's auth state resolves — see authStateResolved above.)
+  window.addEventListener("hashchange", () => { if(location.hash === "#admin") requestAdminAccess(); });
+  document.addEventListener("keydown", (e) => {
+    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a"){
+      e.preventDefault();
+      requestAdminAccess();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
