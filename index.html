@@ -180,7 +180,7 @@
     overflow:hidden; white-space:nowrap; padding:14px 0;
   }
   .marquee-track{
-    display:inline-flex; gap:36px; animation:marquee 26s linear infinite; width:max-content;
+    display:inline-flex; gap:36px; animation:marquee linear infinite; width:max-content;
   }
   @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
   .marquee-item{
@@ -851,7 +851,7 @@
       </div>
       <p class="admin-note-small">The scrolling strip under the header. Add or remove phrases — changes are live immediately.</p>
       <form id="addMarqueeForm" class="admin-ban-add">
-        <input type="text" id="marqueeItemInput" placeholder="e.g. New: Valorant Points" maxlength="60" required>
+        <input type="text" id="marqueeItemInput" placeholder="e.g. New: Valorant Points" maxlength="200" required>
         <button type="submit">Add</button>
       </form>
       <div id="marqueeItemsList" class="products-list"></div>
@@ -1187,8 +1187,30 @@
     "bKash", "Nagad", "Rocket"
   ];
   function renderMarquee(items){
-    const html = items.map(t => `<span class="marquee-item"><span class="marquee-dot">◆</span><b>${escapeHtml(t)}</b></span>`).join("");
-    document.getElementById("marqueeTrack").innerHTML = html + html;
+    const track = document.getElementById("marqueeTrack");
+    if(!items.length){ track.innerHTML = ""; track.style.animation = "none"; return; }
+
+    // With only 1-2 short items, doubling the content (needed below for a seamless loop)
+    // makes it obvious you're just seeing the same phrase repeat immediately. Padding out
+    // one "set" first — by repeating the list — fixes that without changing what you typed.
+    let set = items.slice();
+    let guard = 0;
+    while(set.join("").length < 140 && guard < 20){
+      set = set.concat(items);
+      guard++;
+    }
+
+    const setHtml = set.map(t => `<span class="marquee-item"><span class="marquee-dot">◆</span><b>${escapeHtml(t)}</b></span>`).join("");
+    track.innerHTML = setHtml + setHtml; // duplicated once so the CSS loop below has no visible seam
+
+    // Scroll at a constant SPEED (px/second) rather than a fixed duration — otherwise short
+    // content covers less distance in the same time and visibly crawls.
+    requestAnimationFrame(() => {
+      const oneSetWidth = track.scrollWidth / 2;
+      const pxPerSecond = 70;
+      const duration = Math.max(8, oneSetWidth / pxPerSecond);
+      track.style.animationDuration = duration + "s";
+    });
   }
   async function loadMarquee(){
     if(db){
