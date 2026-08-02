@@ -368,6 +368,27 @@
     padding:8px 12px; border-radius:var(--radius-sm); font-size:.82rem; min-width:190px;
   }
   .admin-ban-add button{ background:var(--ruby); color:#fff; border:none; padding:8px 15px; border-radius:999px; font-size:.8rem; font-weight:700; }
+  .admin-ban-add.wrap-row{ flex-wrap:wrap; }
+  .admin-ban-add.wrap-row button{ background:var(--lantern); color:#1B1408; }
+  .product-cat-select{ flex:0 0 160px; min-width:140px; }
+  .product-price-input{ max-width:110px; }
+  .products-list{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .product-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--ink); border:1px solid var(--ink-line); border-radius:var(--radius-sm);
+    padding:10px 14px; font-size:.86rem;
+  }
+  .product-row .cat-chip{ font-size:.72rem; color:var(--muted); background:var(--ink-soft); padding:3px 9px; border-radius:999px; flex:none; }
+  .product-row .pname{ flex:1; min-width:120px; }
+  .product-row .pprice{ font-family:'JetBrains Mono', monospace; color:var(--lantern); }
+  .product-row button{ background:transparent; border:1px solid var(--ink-line); color:var(--paper); padding:5px 12px; border-radius:999px; font-size:.76rem; font-weight:700; }
+  .product-row button.delete{ color:var(--ruby); }
+  .product-row input{
+    background:var(--ink-soft); border:1px solid var(--ink-line); color:var(--paper);
+    padding:6px 10px; border-radius:8px; font-size:.84rem;
+  }
+  .product-row input.pname-edit{ flex:1; min-width:120px; }
+  .product-row input.pprice-edit{ max-width:90px; }
   .banned-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(--ink-line); font-size:.85rem; }
   .banned-row:first-child{ border-top:none; }
   .banned-row button{ background:transparent; border:1px solid var(--ink-line); color:var(--paper); padding:5px 13px; border-radius:999px; font-size:.76rem; font-weight:700; }
@@ -460,6 +481,8 @@
   .pay-btn[data-method="bkash"].active{ background:var(--bkash); border-color:var(--bkash); color:#fff; }
   .pay-btn[data-method="nagad"].active{ background:var(--nagad); border-color:var(--nagad); color:#1B1408; }
   .pay-btn[data-method="rocket"].active{ background:var(--rocket); border-color:var(--rocket); color:#fff; }
+  .pay-btn[data-method="wallet"].active{ background:var(--lantern); border-color:var(--lantern); color:#1B1408; }
+  .pay-btn:disabled{ opacity:.4; cursor:not-allowed; }
 
   .pay-instructions{
     display:none;
@@ -637,18 +660,21 @@
             <button type="button" class="pay-btn" data-method="bkash">bKash</button>
             <button type="button" class="pay-btn" data-method="nagad">Nagad</button>
             <button type="button" class="pay-btn" data-method="rocket">Rocket</button>
+            <button type="button" class="pay-btn" id="walletPayBtn" data-method="wallet" style="display:none;">Wallet</button>
           </div>
           <div class="pay-instructions" id="payInstructions"></div>
         </div>
 
-        <div class="field">
-          <label for="senderInput">Number you sent money from</label>
-          <input type="tel" id="senderInput" required maxlength="20" placeholder="01XXXXXXXXX">
-        </div>
+        <div id="manualPayFields">
+          <div class="field">
+            <label for="senderInput">Number you sent money from</label>
+            <input type="tel" id="senderInput" maxlength="20" placeholder="01XXXXXXXXX">
+          </div>
 
-        <div class="field">
-          <label for="txnInput">Transaction ID</label>
-          <input type="text" id="txnInput" required maxlength="40" placeholder="e.g. 8N7X2K1A9B">
+          <div class="field">
+            <label for="txnInput">Transaction ID</label>
+            <input type="text" id="txnInput" maxlength="40" placeholder="e.g. 8N7X2K1A9B">
+          </div>
         </div>
 
         <p class="form-error" id="formError">Please fill in every field and choose a payment method.</p>
@@ -775,6 +801,20 @@
 
     <div class="admin-ban-panel">
       <div class="admin-ban-head">
+        <h3>Manage packages</h3>
+      </div>
+      <p class="admin-note-small">Changes here show up for every visitor immediately. If this list is empty, the site is showing its built-in defaults — add anything below to take over.</p>
+      <form id="addProductForm" class="admin-ban-add wrap-row">
+        <select id="productCategorySelect" class="admin-search product-cat-select"></select>
+        <input type="text" id="productNameInput" placeholder="Package name, e.g. 500 Diamonds" maxlength="60" required>
+        <input type="number" id="productPriceInput" class="product-price-input" placeholder="Price (৳)" min="1" step="1" required>
+        <button type="submit">Add</button>
+      </form>
+      <div id="productsList" class="products-list"></div>
+    </div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
         <h3>Banned accounts</h3>
         <div class="admin-ban-add">
           <input type="email" id="banEmailInput" placeholder="email@example.com">
@@ -827,12 +867,12 @@
 
   /* ============ EDIT THIS SECTION FOR YOUR OWN BUSINESS ============ */
   const CONFIG = {
-    whatsapp: "8801935965689", // TODO: replace with your WhatsApp support number (no + or spaces)
+    whatsapp: "8801XXXXXXXXX", // TODO: replace with your WhatsApp support number (no + or spaces)
     adminEmails: ["zihadmoon8@gmail.com"], // Only these Firebase accounts can open the admin panel. There is no other way in — no PIN fallback.
     protectedEmails: ["zihadmoon8@gmail.com"], // These accounts can never be banned, whether from the admin panel or by editing Firestore data directly.
     payment: {
-      bkash:  { label: "bKash",  number: "01935965689", type: "Personal" },
-      nagad:  { label: "Nagad",  number: "01862196668", type: "Personal" },
+      bkash:  { label: "bKash",  number: "01XXXXXXXXX", type: "Personal" },
+      nagad:  { label: "Nagad",  number: "01XXXXXXXXX", type: "Personal" },
       rocket: { label: "Rocket", number: "01XXXXXXXXX-X", type: "Personal" }
     },
     // OPTIONAL: sends you a real email via EmailJS (emailjs.com — free tier available, no backend needed)
@@ -894,11 +934,19 @@
     }).catch(err => console.warn("Admin alert email failed:", err));
   }
 
-  const CATALOG = [
+  const CATEGORY_META = {
+    freefire:  { label: "Free Fire",        accent: "ruby",     tagClass: "tag-ruby",     idLabel: "Free Fire Player ID",             icon: "diamond" },
+    pubg:      { label: "PUBG Mobile",      accent: "sapphire", tagClass: "tag-sapphire", idLabel: "PUBG UID & Zone ID",               icon: "helmet" },
+    tiktok:    { label: "TikTok Growth",    accent: "emerald",  tagClass: "tag-emerald",  idLabel: "TikTok profile link",              icon: "growth" },
+    facebook:  { label: "Facebook Growth",  accent: "emerald",  tagClass: "tag-emerald",  idLabel: "Facebook page/profile link",       icon: "growth" },
+    instagram: { label: "Instagram Growth", accent: "emerald",  tagClass: "tag-emerald",  idLabel: "Instagram username",               icon: "growth" }
+  };
+
+  // Used only if Firestore has no products yet (or Firebase isn't configured) — a working default
+  // so the site never shows up empty. Once you add packages through the admin panel, those take over.
+  const DEFAULT_CATALOG = [
     {
-      id: "freefire", label: "Free Fire", accent: "ruby", tagClass: "tag-ruby",
-      idLabel: "Free Fire Player ID",
-      icon: 'diamond',
+      id: "freefire", ...CATEGORY_META.freefire,
       items: [
         { name: "25 Diamonds", price: 25 },
         { name: "50 Diamonds", price: 49 },
@@ -913,9 +961,7 @@
       ]
     },
     {
-      id: "pubg", label: "PUBG Mobile", accent: "sapphire", tagClass: "tag-sapphire",
-      idLabel: "PUBG UID & Zone ID",
-      icon: "helmet",
+      id: "pubg", ...CATEGORY_META.pubg,
       items: [
         { name: "60 UC", price: 89 },
         { name: "325 UC", price: 449 },
@@ -926,9 +972,7 @@
       ]
     },
     {
-      id: "tiktok", label: "TikTok Growth", accent: "emerald", tagClass: "tag-emerald",
-      idLabel: "TikTok profile link",
-      icon: "growth",
+      id: "tiktok", ...CATEGORY_META.tiktok,
       items: [
         { name: "100 Followers", price: 149 },
         { name: "500 Followers", price: 649 },
@@ -938,9 +982,7 @@
       ]
     },
     {
-      id: "facebook", label: "Facebook Growth", accent: "emerald", tagClass: "tag-emerald",
-      idLabel: "Facebook page/profile link",
-      icon: "growth",
+      id: "facebook", ...CATEGORY_META.facebook,
       items: [
         { name: "100 Page Likes", price: 199 },
         { name: "500 Page Likes", price: 849 },
@@ -948,9 +990,7 @@
       ]
     },
     {
-      id: "instagram", label: "Instagram Growth", accent: "emerald", tagClass: "tag-emerald",
-      idLabel: "Instagram username",
-      icon: "growth",
+      id: "instagram", ...CATEGORY_META.instagram,
       items: [
         { name: "100 Followers", price: 149 },
         { name: "500 Followers", price: 599 },
@@ -960,6 +1000,8 @@
     }
   ];
   /* =================================================================== */
+
+  let CATALOG = DEFAULT_CATALOG; // replaced with live Firestore data once loadCatalog() resolves
 
   // MY_ORDERS_KEY stays local — it's just a convenience list of order IDs this browser has
   // placed, mainly useful for guests (who have no logged-in "my orders" list from Firestore).
@@ -1047,6 +1089,33 @@
     return "GB-" + suffix;
   }
 
+  /* ---------- Products (Firestore-backed catalog, editable from the admin panel) ---------- */
+  async function fetchAllProducts(){
+    if(!db) return [];
+    const snap = await db.collection("products").get();
+    return snap.docs.map(d => ({ pid: d.id, ...d.data() }));
+  }
+  async function loadCatalog(){
+    if(db){
+      try{
+        const products = await fetchAllProducts();
+        const grouped = {};
+        products.forEach(p => {
+          if(!CATEGORY_META[p.categoryId]) return;
+          (grouped[p.categoryId] = grouped[p.categoryId] || []).push({ pid: p.pid, name: p.name, price: p.price });
+        });
+        const catIds = Object.keys(CATEGORY_META).filter(id => grouped[id] && grouped[id].length);
+        if(catIds.length){
+          CATALOG = catIds.map(id => ({ id, ...CATEGORY_META[id], items: grouped[id] }));
+          return;
+        }
+      } catch(err){
+        console.warn("Couldn't load products from Firestore, using defaults:", err);
+      }
+    }
+    CATALOG = DEFAULT_CATALOG;
+  }
+
   /* ---------- Render: WhatsApp links ---------- */
   document.getElementById("whatsappLink").href = "https://wa.me/" + CONFIG.whatsapp;
   document.getElementById("whatsappLink2").href = "https://wa.me/" + CONFIG.whatsapp;
@@ -1062,11 +1131,13 @@
 
   /* ---------- Render: category tabs ---------- */
   const tabsRow = document.getElementById("catTabsRow");
-  let tabsHtml = `<button class="tab-btn active" data-cat="all">All</button>`;
-  CATALOG.forEach(cat => {
-    tabsHtml += `<button class="tab-btn" data-cat="${cat.id}">${cat.label}</button>`;
-  });
-  tabsRow.innerHTML = tabsHtml;
+  function renderTabs(){
+    let tabsHtml = `<button class="tab-btn active" data-cat="all">All</button>`;
+    CATALOG.forEach(cat => {
+      tabsHtml += `<button class="tab-btn" data-cat="${cat.id}">${cat.label}</button>`;
+    });
+    tabsRow.innerHTML = tabsHtml;
+  }
 
   tabsRow.addEventListener("click", (e) => {
     const btn = e.target.closest(".tab-btn");
@@ -1081,37 +1152,44 @@
 
   /* ---------- Render: catalog ---------- */
   const catalogEl = document.getElementById("catalog");
-  let catalogHtml = "";
-  CATALOG.forEach((cat, catIndex) => {
-    catalogHtml += `
-      <section class="cat-section" data-cat="${cat.id}">
-        <div class="cat-section-head">
-          <div class="cat-icon-badge" style="background:rgba(255,255,255,.04);">${icons[cat.icon]}</div>
-          <div>
-            <h2>${cat.label}</h2>
-            <p>${cat.idLabel} required at checkout</p>
-          </div>
-        </div>
-        <div class="ticket-grid">
-          ${cat.items.map((item, itemIndex) => `
-            <div class="ticket">
-              <div class="ticket-top">
-                ${icons[cat.icon]}
-                <div class="ticket-name">${item.name}</div>
-                <span class="ticket-tag ${cat.tagClass}">${cat.label}</span>
-              </div>
-              <div class="ticket-perf"></div>
-              <div class="ticket-bottom">
-                <span class="ticket-price mono">${fmtBDT(item.price)}</span>
-                <button class="ticket-btn" data-cat-index="${catIndex}" data-item-index="${itemIndex}">Top Up</button>
-              </div>
+  function renderCatalogGrid(){
+    let catalogHtml = "";
+    CATALOG.forEach((cat, catIndex) => {
+      catalogHtml += `
+        <section class="cat-section" data-cat="${cat.id}">
+          <div class="cat-section-head">
+            <div class="cat-icon-badge" style="background:rgba(255,255,255,.04);">${icons[cat.icon]}</div>
+            <div>
+              <h2>${cat.label}</h2>
+              <p>${cat.idLabel} required at checkout</p>
             </div>
-          `).join("")}
-        </div>
-      </section>
-    `;
+          </div>
+          <div class="ticket-grid">
+            ${cat.items.map((item, itemIndex) => `
+              <div class="ticket">
+                <div class="ticket-top">
+                  ${icons[cat.icon]}
+                  <div class="ticket-name">${escapeHtml(item.name)}</div>
+                  <span class="ticket-tag ${cat.tagClass}">${cat.label}</span>
+                </div>
+                <div class="ticket-perf"></div>
+                <div class="ticket-bottom">
+                  <span class="ticket-price mono">${fmtBDT(item.price)}</span>
+                  <button class="ticket-btn" data-cat-index="${catIndex}" data-item-index="${itemIndex}">Top Up</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    });
+    catalogEl.innerHTML = catalogHtml;
+  }
+
+  loadCatalog().then(() => {
+    renderTabs();
+    renderCatalogGrid();
   });
-  catalogEl.innerHTML = catalogHtml;
 
   /* ---------- Modal logic ---------- */
   const modal = document.getElementById("orderModal");
@@ -1152,6 +1230,17 @@
     formError.classList.remove("show");
     payInstructions.classList.remove("show");
     payMethods.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("manualPayFields").style.display = "";
+
+    const walletBtn = document.getElementById("walletPayBtn");
+    if(currentUser && currentUserProfile){
+      const balance = currentUserProfile.walletBalance || 0;
+      walletBtn.style.display = "";
+      walletBtn.textContent = `Wallet (${fmtBDT(balance)})`;
+      walletBtn.disabled = balance < item.price;
+    } else {
+      walletBtn.style.display = "none";
+    }
 
     orderFormView.style.display = "";
     successView.classList.remove("show");
@@ -1173,13 +1262,22 @@
 
   payMethods.addEventListener("click", (e) => {
     const btn = e.target.closest(".pay-btn");
-    if(!btn) return;
+    if(!btn || btn.disabled) return;
     selectedMethod = btn.dataset.method;
     payMethods.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    const info = CONFIG.payment[selectedMethod];
-    payInstructions.innerHTML = `Send <b>${sumPrice.textContent}</b> to <b>${info.number}</b> (${info.type}) using ${info.label}'s <b>Send Money</b> option. Then enter the sender number and transaction ID below.`;
-    payInstructions.classList.add("show");
+    const manualFields = document.getElementById("manualPayFields");
+    if(selectedMethod === "wallet"){
+      manualFields.style.display = "none";
+      const balance = currentUserProfile ? (currentUserProfile.walletBalance || 0) : 0;
+      payInstructions.innerHTML = `<b>${sumPrice.textContent}</b> will be deducted from your wallet balance (currently <b>${fmtBDT(balance)}</b>) — no need to send money separately.`;
+      payInstructions.classList.add("show");
+    } else {
+      manualFields.style.display = "";
+      const info = CONFIG.payment[selectedMethod];
+      payInstructions.innerHTML = `Send <b>${sumPrice.textContent}</b> to <b>${info.number}</b> (${info.type}) using ${info.label}'s <b>Send Money</b> option. Then enter the sender number and transaction ID below.`;
+      payInstructions.classList.add("show");
+    }
   });
 
   orderForm.addEventListener("submit", async (e) => {
@@ -1194,17 +1292,77 @@
       showToast("This account can't place orders. Contact support if you think that's a mistake.");
       return;
     }
-    if(!playerIdInput.value.trim() || !senderInput.value.trim() || !txnInput.value.trim() || !selectedMethod){
+    if(!selectedMethod){
+      formError.textContent = "Please choose a payment method.";
+      formError.classList.add("show");
+      return;
+    }
+    if(!playerIdInput.value.trim()){
+      formError.textContent = "Please enter your player ID.";
+      formError.classList.add("show");
+      return;
+    }
+    if(selectedMethod !== "wallet" && (!senderInput.value.trim() || !txnInput.value.trim())){
       formError.textContent = "Please fill in every field and choose a payment method.";
       formError.classList.add("show");
       return;
     }
 
-    const txnId = txnInput.value.trim();
-    const methodLabel = CONFIG.payment[selectedMethod].label;
     const submitBtn = orderForm.querySelector(".submit-btn");
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting…";
+
+    // ---- Wallet payment: atomic balance-deduct + order-create, no transaction ID needed ----
+    if(selectedMethod === "wallet"){
+      try{
+        const orderId = genOrderId();
+        const price = currentSelection.item.price;
+        await db.runTransaction(async (tx) => {
+          const userRef = db.collection("users").doc(currentUser.uid);
+          const userSnap = await tx.get(userRef);
+          const balance = userSnap.exists ? (userSnap.data().walletBalance || 0) : 0;
+          if(balance < price) throw new Error("insufficient-balance");
+          tx.update(userRef, { walletBalance: balance - price });
+          tx.set(db.collection("orders").doc(orderId), {
+            category: currentSelection.cat.label,
+            package: currentSelection.item.name,
+            price,
+            playerId: playerIdInput.value.trim(),
+            paymentMethod: "Wallet balance",
+            senderNumber: "—",
+            transactionId: "—",
+            status: "pending_verification",
+            paidFromWallet: true,
+            uid: currentUser.uid,
+            accountEmail: currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+
+        const mine = loadMyOrders();
+        mine.unshift(orderId);
+        saveMyOrders(mine.slice(0, 8));
+
+        document.getElementById("successOrderId").textContent = orderId;
+        orderFormView.style.display = "none";
+        successView.classList.add("show");
+        renderRecentOrders();
+      } catch(err){
+        console.error(err);
+        formError.textContent = err.message === "insufficient-balance"
+          ? "Your balance dropped below the price — add more money and try again."
+          : "Couldn't submit the order — check your connection and try again.";
+        formError.classList.add("show");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit order";
+      }
+      return;
+    }
+
+    // ---- Manual payment (bKash / Nagad / Rocket) ----
+    const txnId = txnInput.value.trim();
+    const methodLabel = CONFIG.payment[selectedMethod].label;
 
     try{
       // Duplicate-transaction check only covers the logged-in user's own past orders — Firestore's
@@ -1664,6 +1822,106 @@
     return deposits;
   }
 
+  /* ---------- Manage packages (products collection — this is what customers actually see) ---------- */
+  let adminProductsCache = [];
+
+  (function populateCategorySelect(){
+    const select = document.getElementById("productCategorySelect");
+    select.innerHTML = Object.entries(CATEGORY_META).map(([id, meta]) => `<option value="${id}">${escapeHtml(meta.label)}</option>`).join("");
+  })();
+
+  function renderProductsPanel(){
+    const wrap = document.getElementById("productsList");
+    if(adminProductsCache.length === 0){
+      wrap.innerHTML = '<p class="admin-empty-small">No packages added yet — the site is showing its built-in defaults.</p>';
+      return;
+    }
+    const sorted = adminProductsCache.slice().sort((a, b) => (a.categoryId || "").localeCompare(b.categoryId || ""));
+    wrap.innerHTML = sorted.map(p => {
+      const meta = CATEGORY_META[p.categoryId] || { label: p.categoryId };
+      return `
+        <div class="product-row" data-pid="${escapeHtml(p.pid)}">
+          <span class="cat-chip">${escapeHtml(meta.label)}</span>
+          <span class="pname">${escapeHtml(p.name)}</span>
+          <span class="pprice">${fmtBDT(p.price)}</span>
+          <button type="button" data-product-action="edit">Edit</button>
+          <button type="button" data-product-action="delete" class="delete">Delete</button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("addProductForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(!db){ showToast("Not set up yet — add your Firebase config in the script."); return; }
+    const categoryId = document.getElementById("productCategorySelect").value;
+    const name = document.getElementById("productNameInput").value.trim();
+    const price = Number(document.getElementById("productPriceInput").value);
+    if(!name || !price || price <= 0){ showToast("Enter a package name and a price above 0"); return; }
+    try{
+      await db.collection("products").add({ categoryId, name, price, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      document.getElementById("productNameInput").value = "";
+      document.getElementById("productPriceInput").value = "";
+      showToast("Package added");
+      renderAdmin();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+    }
+  });
+
+  document.getElementById("productsList").addEventListener("click", async (e) => {
+    const row = e.target.closest(".product-row");
+    if(!row) return;
+    const pid = row.dataset.pid;
+    const action = e.target.closest("button")?.dataset.productAction;
+    if(!action) return;
+
+    if(action === "delete"){
+      if(!confirm("Remove this package? It will disappear from the storefront.")) return;
+      try{
+        await db.collection("products").doc(pid).delete();
+        showToast("Package removed");
+        renderAdmin();
+      } catch(err){
+        console.error(err);
+        showToast("Something went wrong — try again");
+      }
+      return;
+    }
+
+    if(action === "edit"){
+      const product = adminProductsCache.find(p => p.pid === pid);
+      if(!product) return;
+      row.innerHTML = `
+        <input type="text" class="pname-edit" value="${escapeHtml(product.name)}" maxlength="60">
+        <input type="number" class="pprice-edit" value="${product.price}" min="1" step="1">
+        <button type="button" data-product-action="save">Save</button>
+        <button type="button" data-product-action="cancel">Cancel</button>
+      `;
+      return;
+    }
+
+    if(action === "cancel"){
+      renderProductsPanel();
+      return;
+    }
+
+    if(action === "save"){
+      const name = row.querySelector(".pname-edit").value.trim();
+      const price = Number(row.querySelector(".pprice-edit").value);
+      if(!name || !price || price <= 0){ showToast("Enter a valid name and price"); return; }
+      try{
+        await db.collection("products").doc(pid).update({ name, price });
+        showToast("Package updated");
+        renderAdmin();
+      } catch(err){
+        console.error(err);
+        showToast("Something went wrong — try again");
+      }
+    }
+  });
+
   /* ---------- Bans (a `banned` field on each account's Firestore profile — real, cross-device) ---------- */
   function isProtectedEmail(email){
     return CONFIG.protectedEmails.some(e => e.toLowerCase() === (email || "").toLowerCase());
@@ -1941,11 +2199,13 @@
   async function renderAdmin(){
     if(!db) return;
     try{
-      const [users, orders, deposits] = await Promise.all([fetchAllUsers(), fetchAllOrders(), fetchAllDeposits()]);
+      const [users, orders, deposits, products] = await Promise.all([fetchAllUsers(), fetchAllOrders(), fetchAllDeposits(), fetchAllProducts()]);
       adminUsersCache = users;
       adminOrdersCache = orders;
       adminDepositsCache = deposits;
+      adminProductsCache = products;
       renderAdminStats();
+      renderProductsPanel();
       renderBannedPanel();
       await renderAlertsPanel();
       renderAdminOrders();
