@@ -176,7 +176,7 @@
 
   /* ---------- Marquee ---------- */
   .marquee{
-    margin-top:44px; border-top:1px solid var(--ink-line); border-bottom:1px solid var(--ink-line);
+    border-top:1px solid var(--ink-line); border-bottom:1px solid var(--ink-line);
     overflow:hidden; white-space:nowrap; padding:14px 0;
   }
   .marquee-track{
@@ -389,6 +389,19 @@
   }
   .product-row input.pname-edit{ flex:1; min-width:120px; }
   .product-row input.pprice-edit{ max-width:90px; }
+  .product-row input.porder-edit{ max-width:70px; }
+  .product-row input.pidlabel-edit{ flex:1; min-width:140px; }
+  .product-group{ margin-bottom:16px; }
+  .product-group:last-child{ margin-bottom:0; }
+  .product-group-head{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    font-weight:700; font-size:.82rem; color:var(--muted); margin-bottom:8px; padding:0 2px;
+  }
+  .autosort-btn{
+    background:transparent; border:1px solid var(--ink-line); color:var(--muted);
+    padding:5px 12px; border-radius:999px; font-size:.74rem; font-weight:700;
+  }
+  .autosort-btn:hover{ border-color:var(--lantern); color:var(--lantern); }
   .banned-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid var(--ink-line); font-size:.85rem; }
   .banned-row:first-child{ border-top:none; }
   .banned-row button{ background:transparent; border:1px solid var(--ink-line); color:var(--paper); padding:5px 13px; border-radius:999px; font-size:.76rem; font-weight:700; }
@@ -555,6 +568,10 @@
   </div>
 </header>
 
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
 <main id="top">
   <section class="hero">
     <div class="hero-glow"></div>
@@ -566,10 +583,6 @@
         <a href="#catalog" class="btn-primary">Browse packages ↓</a>
         <a href="#track" class="btn-ghost">Track an order</a>
       </div>
-    </div>
-
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" id="marqueeTrack"></div>
     </div>
   </section>
 
@@ -801,9 +814,28 @@
 
     <div class="admin-ban-panel">
       <div class="admin-ban-head">
+        <h3>Manage categories</h3>
+        <button type="button" class="admin-icon-btn" id="importDefaultsBtn">Import defaults to start</button>
+      </div>
+      <p class="admin-note-small">Categories group your packages (Free Fire, PUBG, etc). Once you add your first one here, the site switches over to your own categories completely — "Import defaults" seeds the current 5 (with their existing packages) so you have something to edit right away instead of starting blank.</p>
+      <form id="addCategoryForm" class="admin-ban-add wrap-row">
+        <input type="text" id="categoryLabelInput" placeholder="Category name, e.g. Valorant Points" maxlength="40" required>
+        <input type="text" id="categoryIdLabelInput" placeholder="ID field label, e.g. Valorant Riot ID" maxlength="60" required>
+        <select id="categoryStyleSelect" class="admin-search product-cat-select">
+          <option value="diamond|ruby|tag-ruby">Diamond · Ruby</option>
+          <option value="helmet|sapphire|tag-sapphire">Helmet · Sapphire</option>
+          <option value="growth|emerald|tag-emerald">Growth · Emerald</option>
+        </select>
+        <button type="submit">Add category</button>
+      </form>
+      <div id="categoriesList" class="products-list"></div>
+    </div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
         <h3>Manage packages</h3>
       </div>
-      <p class="admin-note-small">Changes here show up for every visitor immediately. If this list is empty, the site is showing its built-in defaults — add anything below to take over.</p>
+      <p class="admin-note-small">Changes here show up for every visitor immediately. Add a category above first — packages need one to belong to. Use "Order" to control position manually, or auto-sort a whole category by price.</p>
       <form id="addProductForm" class="admin-ban-add wrap-row">
         <select id="productCategorySelect" class="admin-search product-cat-select"></select>
         <input type="text" id="productNameInput" placeholder="Package name, e.g. 500 Diamonds" maxlength="60" required>
@@ -811,6 +843,18 @@
         <button type="submit">Add</button>
       </form>
       <div id="productsList" class="products-list"></div>
+    </div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
+        <h3>Marquee text</h3>
+      </div>
+      <p class="admin-note-small">The scrolling strip under the header. Add or remove phrases — changes are live immediately.</p>
+      <form id="addMarqueeForm" class="admin-ban-add">
+        <input type="text" id="marqueeItemInput" placeholder="e.g. New: Valorant Points" maxlength="60" required>
+        <button type="submit">Add</button>
+      </form>
+      <div id="marqueeItemsList" class="products-list"></div>
     </div>
 
     <div class="admin-ban-panel">
@@ -867,12 +911,12 @@
 
   /* ============ EDIT THIS SECTION FOR YOUR OWN BUSINESS ============ */
   const CONFIG = {
-    whatsapp: "8801935965689", // TODO: replace with your WhatsApp support number (no + or spaces)
+    whatsapp: "8801XXXXXXXXX", // TODO: replace with your WhatsApp support number (no + or spaces)
     adminEmails: ["zihadmoon8@gmail.com"], // Only these Firebase accounts can open the admin panel. There is no other way in — no PIN fallback.
     protectedEmails: ["zihadmoon8@gmail.com"], // These accounts can never be banned, whether from the admin panel or by editing Firestore data directly.
     payment: {
-      bkash:  { label: "bKash",  number: "01935965689", type: "Personal" },
-      nagad:  { label: "Nagad",  number: "01862196668", type: "Personal" },
+      bkash:  { label: "bKash",  number: "01XXXXXXXXX", type: "Personal" },
+      nagad:  { label: "Nagad",  number: "01XXXXXXXXX", type: "Personal" },
       rocket: { label: "Rocket", number: "01XXXXXXXXX-X", type: "Personal" }
     },
     // OPTIONAL: sends you a real email via EmailJS (emailjs.com — free tier available, no backend needed)
@@ -1090,30 +1134,46 @@
   }
 
   /* ---------- Products (Firestore-backed catalog, editable from the admin panel) ---------- */
+  async function fetchAllCategories(){
+    if(!db) return [];
+    const snap = await db.collection("categories").get();
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
   async function fetchAllProducts(){
     if(!db) return [];
     const snap = await db.collection("products").get();
     return snap.docs.map(d => ({ pid: d.id, ...d.data() }));
   }
   async function loadCatalog(){
+    let categories = [];
+    let products = [];
     if(db){
       try{
-        const products = await fetchAllProducts();
-        const grouped = {};
-        products.forEach(p => {
-          if(!CATEGORY_META[p.categoryId]) return;
-          (grouped[p.categoryId] = grouped[p.categoryId] || []).push({ pid: p.pid, name: p.name, price: p.price });
-        });
-        const catIds = Object.keys(CATEGORY_META).filter(id => grouped[id] && grouped[id].length);
-        if(catIds.length){
-          CATALOG = catIds.map(id => ({ id, ...CATEGORY_META[id], items: grouped[id] }));
-          return;
-        }
+        [categories, products] = await Promise.all([fetchAllCategories(), fetchAllProducts()]);
       } catch(err){
-        console.warn("Couldn't load products from Firestore, using defaults:", err);
+        console.warn("Couldn't load catalog from Firestore, using defaults:", err);
       }
     }
-    CATALOG = DEFAULT_CATALOG;
+    if(categories.length === 0){
+      // Nothing customized yet — same built-in catalog as always.
+      CATALOG = DEFAULT_CATALOG;
+      return;
+    }
+    categories.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const byCategory = {};
+    products.forEach(p => (byCategory[p.categoryId] = byCategory[p.categoryId] || []).push(p));
+    Object.values(byCategory).forEach(list =>
+      list.sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.price - b.price)
+    );
+    CATALOG = categories.map(cat => ({
+      id: cat.id,
+      label: cat.label,
+      idLabel: cat.idLabel,
+      icon: cat.icon || "growth",
+      accent: cat.accent || "emerald",
+      tagClass: cat.tagClass || "tag-emerald",
+      items: (byCategory[cat.id] || []).map(p => ({ pid: p.pid, name: p.name, price: p.price, order: p.order ?? 0 }))
+    }));
   }
 
   /* ---------- Render: WhatsApp links ---------- */
@@ -1121,13 +1181,30 @@
   document.getElementById("whatsappLink2").href = "https://wa.me/" + CONFIG.whatsapp;
 
   /* ---------- Render: marquee ---------- */
-  const marqueeItems = [
+  const DEFAULT_MARQUEE_ITEMS = [
     "Free Fire Diamonds", "PUBG Mobile UC", "TikTok Followers",
     "Facebook Page Likes", "Instagram Followers", "Verified by hand",
     "bKash", "Nagad", "Rocket"
   ];
-  const marqueeHtml = marqueeItems.map(t => `<span class="marquee-item"><span class="marquee-dot">◆</span><b>${t}</b></span>`).join("");
-  document.getElementById("marqueeTrack").innerHTML = marqueeHtml + marqueeHtml;
+  function renderMarquee(items){
+    const html = items.map(t => `<span class="marquee-item"><span class="marquee-dot">◆</span><b>${escapeHtml(t)}</b></span>`).join("");
+    document.getElementById("marqueeTrack").innerHTML = html + html;
+  }
+  async function loadMarquee(){
+    if(db){
+      try{
+        const doc = await db.collection("settings").doc("marquee").get();
+        if(doc.exists && Array.isArray(doc.data().items) && doc.data().items.length){
+          renderMarquee(doc.data().items);
+          return;
+        }
+      } catch(err){
+        console.warn("Couldn't load marquee text, using default:", err);
+      }
+    }
+    renderMarquee(DEFAULT_MARQUEE_ITEMS);
+  }
+  loadMarquee();
 
   /* ---------- Render: category tabs ---------- */
   const tabsRow = document.getElementById("catTabsRow");
@@ -1822,30 +1899,198 @@
     return deposits;
   }
 
-  /* ---------- Manage packages (products collection — this is what customers actually see) ---------- */
+  /* ---------- Manage categories (categories collection) ---------- */
+  let adminCategoriesCache = [];
   let adminProductsCache = [];
 
-  (function populateCategorySelect(){
+  function renderCategoriesPanel(){
+    const wrap = document.getElementById("categoriesList");
+    if(adminCategoriesCache.length === 0){
+      wrap.innerHTML = '<p class="admin-empty-small">No custom categories yet — the site is showing its 5 built-in categories with their default packages.</p>';
+      return;
+    }
+    const sorted = adminCategoriesCache.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    wrap.innerHTML = sorted.map((cat, i) => `
+      <div class="product-row" data-cid="${escapeHtml(cat.id)}">
+        <span class="cat-chip">${escapeHtml(cat.icon || "")} / ${escapeHtml(cat.accent || "")}</span>
+        <span class="pname">${escapeHtml(cat.label)}</span>
+        <button type="button" data-cat-action="up" ${i === 0 ? "disabled" : ""}>↑</button>
+        <button type="button" data-cat-action="down" ${i === sorted.length - 1 ? "disabled" : ""}>↓</button>
+        <button type="button" data-cat-action="edit">Edit</button>
+        <button type="button" data-cat-action="delete" class="delete">Delete</button>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("addCategoryForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(!db){ showToast("Not set up yet — add your Firebase config in the script."); return; }
+    const label = document.getElementById("categoryLabelInput").value.trim();
+    const idLabel = document.getElementById("categoryIdLabelInput").value.trim();
+    const [icon, accent, tagClass] = document.getElementById("categoryStyleSelect").value.split("|");
+    if(!label || !idLabel){ showToast("Fill in both fields"); return; }
+    const nextOrder = adminCategoriesCache.length ? Math.max(...adminCategoriesCache.map(c => c.order ?? 0)) + 1 : 0;
+    try{
+      await db.collection("categories").add({
+        label, idLabel, icon, accent, tagClass, order: nextOrder,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      document.getElementById("categoryLabelInput").value = "";
+      document.getElementById("categoryIdLabelInput").value = "";
+      showToast("Category added");
+      renderAdmin();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+    }
+  });
+
+  document.getElementById("categoriesList").addEventListener("click", async (e) => {
+    const row = e.target.closest(".product-row");
+    if(!row) return;
+    const cid = row.dataset.cid;
+    const action = e.target.closest("button")?.dataset.catAction;
+    if(!action) return;
+
+    const sorted = adminCategoriesCache.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const idx = sorted.findIndex(c => c.id === cid);
+
+    if(action === "up" || action === "down"){
+      const swapIdx = action === "up" ? idx - 1 : idx + 1;
+      if(swapIdx < 0 || swapIdx >= sorted.length) return;
+      const a = sorted[idx], b = sorted[swapIdx];
+      try{
+        const batch = db.batch();
+        batch.update(db.collection("categories").doc(a.id), { order: b.order ?? swapIdx });
+        batch.update(db.collection("categories").doc(b.id), { order: a.order ?? idx });
+        await batch.commit();
+        renderAdmin();
+      } catch(err){
+        console.error(err);
+        showToast("Something went wrong — try again");
+      }
+      return;
+    }
+
+    if(action === "delete"){
+      const inCategory = adminProductsCache.filter(p => p.categoryId === cid);
+      const msg = inCategory.length
+        ? `Delete this category AND its ${inCategory.length} package(s)? This can't be undone.`
+        : "Delete this category?";
+      if(!confirm(msg)) return;
+      try{
+        const batch = db.batch();
+        batch.delete(db.collection("categories").doc(cid));
+        inCategory.forEach(p => batch.delete(db.collection("products").doc(p.pid)));
+        await batch.commit();
+        showToast("Category removed");
+        renderAdmin();
+      } catch(err){
+        console.error(err);
+        showToast("Something went wrong — try again");
+      }
+      return;
+    }
+
+    if(action === "edit"){
+      const cat = adminCategoriesCache.find(c => c.id === cid);
+      if(!cat) return;
+      row.innerHTML = `
+        <input type="text" class="pname-edit" value="${escapeHtml(cat.label)}" maxlength="40">
+        <input type="text" class="pidlabel-edit" value="${escapeHtml(cat.idLabel || "")}" maxlength="60">
+        <button type="button" data-cat-action="save">Save</button>
+        <button type="button" data-cat-action="cancel">Cancel</button>
+      `;
+      return;
+    }
+
+    if(action === "cancel"){
+      renderCategoriesPanel();
+      return;
+    }
+
+    if(action === "save"){
+      const label = row.querySelector(".pname-edit").value.trim();
+      const idLabel = row.querySelector(".pidlabel-edit").value.trim();
+      if(!label || !idLabel){ showToast("Fill in both fields"); return; }
+      try{
+        await db.collection("categories").doc(cid).update({ label, idLabel });
+        showToast("Category updated");
+        renderAdmin();
+      } catch(err){
+        console.error(err);
+        showToast("Something went wrong — try again");
+      }
+    }
+  });
+
+  document.getElementById("importDefaultsBtn").addEventListener("click", async () => {
+    if(!db){ showToast("Not set up yet — add your Firebase config in the script."); return; }
+    if(adminCategoriesCache.length > 0){
+      if(!confirm("You already have categories. Import the 5 defaults anyway? This won't duplicate categories, but will add their default packages again.")) return;
+    }
+    try{
+      const batch = db.batch();
+      DEFAULT_CATALOG.forEach((cat, ci) => {
+        // Fixed IDs (freefire, pubg, ...) so clicking Import twice overwrites the same category
+        // docs instead of duplicating them.
+        batch.set(db.collection("categories").doc(cat.id), {
+          label: cat.label, idLabel: cat.idLabel, icon: cat.icon, accent: cat.accent, tagClass: cat.tagClass,
+          order: ci, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        cat.items.forEach((item, ii) => {
+          batch.set(db.collection("products").doc(), {
+            categoryId: cat.id, name: item.name, price: item.price, order: ii,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+      });
+      await batch.commit();
+      showToast("Defaults imported — edit away");
+      renderAdmin();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+    }
+  });
+
+  /* ---------- Manage packages (products collection — this is what customers actually see) ---------- */
+  function refreshProductCategorySelect(){
     const select = document.getElementById("productCategorySelect");
-    select.innerHTML = Object.entries(CATEGORY_META).map(([id, meta]) => `<option value="${id}">${escapeHtml(meta.label)}</option>`).join("");
-  })();
+    const sorted = adminCategoriesCache.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    select.innerHTML = sorted.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join("");
+    const disabled = sorted.length === 0;
+    document.getElementById("addProductForm").querySelectorAll("input, select, button").forEach(el => el.disabled = disabled);
+  }
 
   function renderProductsPanel(){
     const wrap = document.getElementById("productsList");
-    if(adminProductsCache.length === 0){
-      wrap.innerHTML = '<p class="admin-empty-small">No packages added yet — the site is showing its built-in defaults.</p>';
+    if(adminCategoriesCache.length === 0){
+      wrap.innerHTML = '<p class="admin-empty-small">Add a category above first, or use "Import defaults to start".</p>';
       return;
     }
-    const sorted = adminProductsCache.slice().sort((a, b) => (a.categoryId || "").localeCompare(b.categoryId || ""));
-    wrap.innerHTML = sorted.map(p => {
-      const meta = CATEGORY_META[p.categoryId] || { label: p.categoryId };
+    const catsSorted = adminCategoriesCache.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    wrap.innerHTML = catsSorted.map(cat => {
+      const items = adminProductsCache
+        .filter(p => p.categoryId === cat.id)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.price - b.price);
       return `
-        <div class="product-row" data-pid="${escapeHtml(p.pid)}">
-          <span class="cat-chip">${escapeHtml(meta.label)}</span>
-          <span class="pname">${escapeHtml(p.name)}</span>
-          <span class="pprice">${fmtBDT(p.price)}</span>
-          <button type="button" data-product-action="edit">Edit</button>
-          <button type="button" data-product-action="delete" class="delete">Delete</button>
+        <div class="product-group">
+          <div class="product-group-head">
+            <span>${escapeHtml(cat.label)}</span>
+            ${items.length > 1 ? `<button type="button" class="autosort-btn" data-autosort-cat="${escapeHtml(cat.id)}">Auto-sort by price</button>` : ""}
+          </div>
+          ${items.length === 0
+            ? '<p class="admin-empty-small">No packages in this category yet.</p>'
+            : items.map(p => `
+              <div class="product-row" data-pid="${escapeHtml(p.pid)}">
+                <span class="pname">${escapeHtml(p.name)}</span>
+                <span class="pprice">${fmtBDT(p.price)}</span>
+                <button type="button" data-product-action="edit">Edit</button>
+                <button type="button" data-product-action="delete" class="delete">Delete</button>
+              </div>
+            `).join("")
+          }
         </div>
       `;
     }).join("");
@@ -1855,11 +2100,17 @@
     e.preventDefault();
     if(!db){ showToast("Not set up yet — add your Firebase config in the script."); return; }
     const categoryId = document.getElementById("productCategorySelect").value;
+    if(!categoryId){ showToast("Add a category first"); return; }
     const name = document.getElementById("productNameInput").value.trim();
     const price = Number(document.getElementById("productPriceInput").value);
     if(!name || !price || price <= 0){ showToast("Enter a package name and a price above 0"); return; }
+    const siblings = adminProductsCache.filter(p => p.categoryId === categoryId);
+    const nextOrder = siblings.length ? Math.max(...siblings.map(p => p.order ?? 0)) + 1 : 0;
     try{
-      await db.collection("products").add({ categoryId, name, price, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      await db.collection("products").add({
+        categoryId, name, price, order: nextOrder,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
       document.getElementById("productNameInput").value = "";
       document.getElementById("productPriceInput").value = "";
       showToast("Package added");
@@ -1871,6 +2122,23 @@
   });
 
   document.getElementById("productsList").addEventListener("click", async (e) => {
+    const autosortBtn = e.target.closest("button[data-autosort-cat]");
+    if(autosortBtn){
+      const catId = autosortBtn.dataset.autosortCat;
+      const items = adminProductsCache.filter(p => p.categoryId === catId).sort((a, b) => a.price - b.price);
+      try{
+        const batch = db.batch();
+        items.forEach((p, i) => batch.update(db.collection("products").doc(p.pid), { order: i }));
+        await batch.commit();
+        showToast("Sorted by price");
+        renderAdmin();
+      } catch(err){
+        console.error(err);
+        showToast("Something went wrong — try again");
+      }
+      return;
+    }
+
     const row = e.target.closest(".product-row");
     if(!row) return;
     const pid = row.dataset.pid;
@@ -1896,6 +2164,7 @@
       row.innerHTML = `
         <input type="text" class="pname-edit" value="${escapeHtml(product.name)}" maxlength="60">
         <input type="number" class="pprice-edit" value="${product.price}" min="1" step="1">
+        <input type="number" class="porder-edit" value="${product.order ?? 0}" step="1" title="Position — lower shows first">
         <button type="button" data-product-action="save">Save</button>
         <button type="button" data-product-action="cancel">Cancel</button>
       `;
@@ -1910,15 +2179,69 @@
     if(action === "save"){
       const name = row.querySelector(".pname-edit").value.trim();
       const price = Number(row.querySelector(".pprice-edit").value);
+      const order = Number(row.querySelector(".porder-edit").value) || 0;
       if(!name || !price || price <= 0){ showToast("Enter a valid name and price"); return; }
       try{
-        await db.collection("products").doc(pid).update({ name, price });
+        await db.collection("products").doc(pid).update({ name, price, order });
         showToast("Package updated");
         renderAdmin();
       } catch(err){
         console.error(err);
         showToast("Something went wrong — try again");
       }
+    }
+  });
+
+  /* ---------- Marquee text (settings/marquee doc — a single array of short phrases) ---------- */
+  let adminMarqueeCache = [];
+
+  function renderMarqueeAdminPanel(){
+    const wrap = document.getElementById("marqueeItemsList");
+    if(adminMarqueeCache.length === 0){
+      wrap.innerHTML = '<p class="admin-empty-small">No custom text yet — showing the built-in default strip.</p>';
+      return;
+    }
+    wrap.innerHTML = adminMarqueeCache.map((text, i) => `
+      <div class="product-row">
+        <span class="pname">${escapeHtml(text)}</span>
+        <button type="button" data-marquee-remove="${i}" class="delete">Remove</button>
+      </div>
+    `).join("");
+  }
+
+  async function saveMarqueeItems(items){
+    await db.collection("settings").doc("marquee").set({ items });
+    adminMarqueeCache = items;
+    renderMarqueeAdminPanel();
+    loadMarquee();
+  }
+
+  document.getElementById("addMarqueeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(!db){ showToast("Not set up yet — add your Firebase config in the script."); return; }
+    const input = document.getElementById("marqueeItemInput");
+    const text = input.value.trim();
+    if(!text) return;
+    try{
+      await saveMarqueeItems([...adminMarqueeCache, text]);
+      input.value = "";
+      showToast("Added");
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+    }
+  });
+
+  document.getElementById("marqueeItemsList").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-marquee-remove]");
+    if(!btn) return;
+    const idx = Number(btn.dataset.marqueeRemove);
+    try{
+      await saveMarqueeItems(adminMarqueeCache.filter((_, i) => i !== idx));
+      showToast("Removed");
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
     }
   });
 
@@ -2199,13 +2522,21 @@
   async function renderAdmin(){
     if(!db) return;
     try{
-      const [users, orders, deposits, products] = await Promise.all([fetchAllUsers(), fetchAllOrders(), fetchAllDeposits(), fetchAllProducts()]);
+      const [users, orders, deposits, products, categories, marqueeDoc] = await Promise.all([
+        fetchAllUsers(), fetchAllOrders(), fetchAllDeposits(), fetchAllProducts(), fetchAllCategories(),
+        db.collection("settings").doc("marquee").get()
+      ]);
       adminUsersCache = users;
       adminOrdersCache = orders;
       adminDepositsCache = deposits;
       adminProductsCache = products;
+      adminCategoriesCache = categories;
+      adminMarqueeCache = (marqueeDoc.exists && Array.isArray(marqueeDoc.data().items)) ? marqueeDoc.data().items : [];
       renderAdminStats();
+      renderCategoriesPanel();
+      refreshProductCategorySelect();
       renderProductsPanel();
+      renderMarqueeAdminPanel();
       renderBannedPanel();
       await renderAlertsPanel();
       renderAdminOrders();
