@@ -487,6 +487,12 @@
     padding:11px 13px; border-radius:var(--radius-sm); font-size:.94rem;
   }
   .field input:focus-visible{ outline:2px solid var(--lantern); outline-offset:1px; }
+  .admin-textarea{
+    width:100%; resize:vertical; background:var(--ink); border:1px solid var(--ink-line); color:var(--paper);
+    padding:11px 13px; border-radius:var(--radius-sm); font-size:.94rem; font-family:inherit;
+  }
+  .admin-textarea:focus-visible{ outline:2px solid var(--lantern); outline-offset:1px; }
+  .hero-save-btn{ width:auto; padding:11px 22px; }
 
   .pay-methods{ display:flex; gap:8px; margin-bottom:14px; }
   .pay-btn{
@@ -620,9 +626,9 @@
   <section class="hero">
     <div class="hero-glow"></div>
     <div class="wrap">
-      <span class="eyebrow">⚡ Instant delivery · bKash · Nagad · Rocket</span>
-      <h1>Top up your game.<br>Not your <span>patience</span>.</h1>
-      <p class="lead">Free Fire Diamonds, PUBG Mobile UC and social growth packages — paid by bKash, Nagad or Rocket, and delivered by hand within minutes.</p>
+      <span class="eyebrow" id="heroEyebrow">⚡ Instant delivery · bKash · Nagad · Rocket</span>
+      <h1 id="heroHeadline">Top up your game.<br>Not your <span>patience</span>.</h1>
+      <p class="lead" id="heroLead">Free Fire Diamonds, PUBG Mobile UC and social growth packages — paid by bKash, Nagad or Rocket, and delivered by hand within minutes.</p>
       <div class="hero-ctas">
         <a href="#catalog" class="btn-primary">Browse packages ↓</a>
         <a href="#track" class="btn-ghost">Track an order</a>
@@ -903,6 +909,28 @@
 
     <div class="admin-ban-panel">
       <div class="admin-ban-head">
+        <h3>Homepage text</h3>
+      </div>
+      <p class="admin-note-small">The pill, headline, and paragraph at the top of the site. In the headline, wrap a word in *asterisks* to give it the gold highlight, and use a new line for the line break.</p>
+      <form id="heroTextForm">
+        <div class="field">
+          <label for="heroEyebrowInput">Eyebrow pill</label>
+          <input type="text" id="heroEyebrowInput" maxlength="120">
+        </div>
+        <div class="field">
+          <label for="heroHeadlineInput">Headline</label>
+          <textarea id="heroHeadlineInput" class="admin-textarea" rows="2" maxlength="200"></textarea>
+        </div>
+        <div class="field">
+          <label for="heroLeadInput">Paragraph</label>
+          <textarea id="heroLeadInput" class="admin-textarea" rows="3" maxlength="400"></textarea>
+        </div>
+        <button type="submit" class="submit-btn hero-save-btn">Save homepage text</button>
+      </form>
+    </div>
+
+    <div class="admin-ban-panel">
+      <div class="admin-ban-head">
         <h3>Banned accounts</h3>
         <div class="admin-ban-add">
           <input type="email" id="banEmailInput" placeholder="email@example.com">
@@ -955,12 +983,12 @@
 
   /* ============ EDIT THIS SECTION FOR YOUR OWN BUSINESS ============ */
   const CONFIG = {
-    whatsapp: "8801935965689", // TODO: replace with your WhatsApp support number (no + or spaces)
+    whatsapp: "8801XXXXXXXXX", // TODO: replace with your WhatsApp support number (no + or spaces)
     adminEmails: ["zihadmoon8@gmail.com"], // Only these Firebase accounts can open the admin panel. There is no other way in — no PIN fallback.
     protectedEmails: ["zihadmoon8@gmail.com"], // These accounts can never be banned, whether from the admin panel or by editing Firestore data directly.
     payment: {
-      bkash:  { label: "bKash",  number: "01935965689", type: "Personal" },
-      nagad:  { label: "Nagad",  number: "01862196668", type: "Personal" },
+      bkash:  { label: "bKash",  number: "01XXXXXXXXX", type: "Personal" },
+      nagad:  { label: "Nagad",  number: "01XXXXXXXXX", type: "Personal" },
       rocket: { label: "Rocket", number: "01XXXXXXXXX-X", type: "Personal" }
     },
     // OPTIONAL: sends you a real email via EmailJS (emailjs.com — free tier available, no backend needed)
@@ -1271,6 +1299,28 @@
     renderMarquee(DEFAULT_MARQUEE_ITEMS);
   }
   loadMarquee();
+
+  /* ---------- Render: homepage text (eyebrow, headline, lead paragraph) ---------- */
+  // Headline markup: a blank-line-free \n starts a new line, and *word* gets the gold highlight.
+  // escapeHtml runs first, so whatever the admin types can't inject anything — only our own
+  // <br>/<span> tags get introduced afterward.
+  function formatHeadline(raw){
+    return escapeHtml(raw).replace(/\n/g, "<br>").replace(/\*(.+?)\*/g, "<span>$1</span>");
+  }
+  async function loadHeroText(){
+    if(!db) return;
+    try{
+      const doc = await db.collection("settings").doc("hero").get();
+      if(!doc.exists) return;
+      const data = doc.data();
+      if(data.eyebrow) document.getElementById("heroEyebrow").textContent = data.eyebrow;
+      if(data.headlineRaw) document.getElementById("heroHeadline").innerHTML = formatHeadline(data.headlineRaw);
+      if(data.lead) document.getElementById("heroLead").textContent = data.lead;
+    } catch(err){
+      console.warn("Couldn't load homepage text, using default:", err);
+    }
+  }
+  loadHeroText();
 
   /* ---------- Render: category tabs ---------- */
   const tabsRow = document.getElementById("catTabsRow");
@@ -2311,6 +2361,37 @@
     }
   });
 
+  /* ---------- Homepage text (settings/hero doc) ---------- */
+  async function loadHeroAdminForm(){
+    if(!db) return;
+    try{
+      const doc = await db.collection("settings").doc("hero").get();
+      const data = doc.exists ? doc.data() : {};
+      document.getElementById("heroEyebrowInput").value = data.eyebrow || document.getElementById("heroEyebrow").textContent.trim();
+      document.getElementById("heroHeadlineInput").value = data.headlineRaw || "Top up your game.\nNot your *patience*.";
+      document.getElementById("heroLeadInput").value = data.lead || document.getElementById("heroLead").textContent.trim();
+    } catch(err){
+      console.warn("Couldn't load current homepage text:", err);
+    }
+  }
+
+  document.getElementById("heroTextForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if(!db){ showToast("Not set up yet — add your Firebase config in the script."); return; }
+    const eyebrow = document.getElementById("heroEyebrowInput").value.trim();
+    const headlineRaw = document.getElementById("heroHeadlineInput").value.trim();
+    const lead = document.getElementById("heroLeadInput").value.trim();
+    if(!eyebrow || !headlineRaw || !lead){ showToast("Fill in all three fields"); return; }
+    try{
+      await db.collection("settings").doc("hero").set({ eyebrow, headlineRaw, lead });
+      showToast("Homepage text updated");
+      loadHeroText();
+    } catch(err){
+      console.error(err);
+      showToast("Something went wrong — try again");
+    }
+  });
+
   /* ---------- Bans (a `banned` field on each account's Firestore profile — real, cross-device) ---------- */
   function isProtectedEmail(email){
     return CONFIG.protectedEmails.some(e => e.toLowerCase() === (email || "").toLowerCase());
@@ -2447,6 +2528,7 @@
     document.getElementById("adminSearch").value = "";
     document.querySelectorAll("#adminFilterTabs .tab-btn").forEach(b => b.classList.toggle("active", b.dataset.status === "all"));
     renderAdmin();
+    loadHeroAdminForm();
     adminOverlay.classList.add("open");
   }
   function closeAdminPanel(){
